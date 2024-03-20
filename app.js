@@ -6,7 +6,7 @@ const uri = "mongodb://localhost:27017/techwise";
 
 app.use(express.json());
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://localhost:3000', 'http://10.206.35.1:3000'];
+  const allowedOrigins = ['http://localhost:3000', 'http://10.206.35.143:3000'];
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
