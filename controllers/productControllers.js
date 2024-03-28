@@ -60,5 +60,5 @@ module.exports = {
     allProducts,
     singleProduct,
     byCategory,
-    addProduct
+    addProduct,
 }

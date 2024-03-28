@@ -1,6 +1,7 @@
 const { connectToDb } = require('./db');
 const express = require('express');
 const productRoute = require('./routes/productRoutes');
+const userRoute = require('./routes/userRoutes');
 const app = express();
 
 app.use(express.json());
@@ -29,3 +30,4 @@ app.get("/", (req, res) => {
 });
 
 app.use('/techwise-api', productRoute);
+app.use('/user', userRoute);
