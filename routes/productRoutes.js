@@ -5,6 +5,7 @@ const productRoute = express.Router();
 productRoute.get('', productController.allProducts);
 productRoute.get('/:id', productController.singleProduct);
 productRoute.get('/category/:cat', productController.byCategory);
+productRoute.get('/search/:q', productController.search);
 
 productRoute.post('', productController.addProduct);
 

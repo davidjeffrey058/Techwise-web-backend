@@ -4,7 +4,7 @@ const { getDb } = require('../db');
 // Get all products
 const allProducts = (req, res) => {
     getDb().collection("products")
-        .find()
+        .find({}, { name: 1, price: 1, num_of_reviews: 1, total_rating: 1, image_urls: 1 })
         .toArray()
         .then((products) => {
             res.status(200).json(products);
@@ -40,6 +40,21 @@ const byCategory = (req, res) => {
         })
 }
 
+// Search a product
+const search = (req, res) => {
+    const query = req.params.q;
+    getDb().collection('products')
+        .find({
+            $or: [
+                { name: { $regex: query, $options: 'i' } },
+                { category: { $regex: query, $options: 'i' } }
+            ]
+        })
+        .toArray()
+        .then(data => res.status(200).json(data))
+        .catch(() => res.status(500).json({ error: "Can't get data" }));
+}
+
 
 // --- ALL POST REQUEST METHOD ---
 // Add a product
@@ -61,4 +76,5 @@ module.exports = {
     singleProduct,
     byCategory,
     addProduct,
+    search,
 }
