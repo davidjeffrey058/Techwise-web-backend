@@ -1,5 +1,32 @@
 const { getDb } = require('../db');
+// const userRef = getDb().collection('users')
+const addUser = (req, res) => {
+    const data = req.body;
+    // res.status(200).json(req.body);
+    getDb().collection('users')
+        .findOne({ _id: req.params.id })
+        .then(document => {
+            if (document) {
+                res.status(200).json({ exists: true });
+            } else {
+                getDb().collection('users')
+                    .insertOne({
+                        _id: data.uid,
+                        wishlist: [],
+                        name: data.name,
+                        cart: [],
+                        email: data.email
+                    })
+                    .then(() => res.status(200).json({ exists: false }));
 
+            }
+        })
+        .catch(() => {
+            res.status(500).json({ error: "Unable to connect" })
+        })
+}
+
+// Users whishlist products
 const userWishlist = (req, res) => {
     getDb().collection('users')
         .findOne({ _id: req.params.id })
@@ -119,5 +146,6 @@ module.exports = {
     addOrRemoveWish,
     userCart,
     listOfCart,
-    addOrRemoveFromCart
+    addOrRemoveFromCart,
+    addUser
 }
