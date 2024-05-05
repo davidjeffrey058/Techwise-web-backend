@@ -26,6 +26,12 @@ const addUser = (req, res) => {
         })
 }
 
+// Increasing or decreasing the product order quantity
+// const updateOrderQuantity = (req, res) => {
+//     getDb().collection('users')
+//         .updateOne({ _id: req.params.id })
+// }
+
 // Users whishlist products
 const userWishlist = (req, res) => {
     getDb().collection('users')
@@ -49,17 +55,29 @@ const userWishlist = (req, res) => {
 const userCart = (req, res) => {
     getDb().collection('users')
         .findOne({ _id: req.params.id })
-        .then((data) => {
+        .then((listData) => {
 
             const list = [];
-            data.cart.forEach(element => {
+            listData.cart.forEach(element => {
                 list.push(element.id);
             });
 
             getDb().collection('products')
                 .find({ _id: { $in: list } })
                 .toArray().then(data => {
-                    res.status(200).json(data);
+                    const cartList = [];
+                    data.forEach((value, index) => {
+                        cartList.push({
+                            name: value.name,
+                            price: value.price,
+                            image_urls: value.image_urls,
+                            _id: value._id,
+                            order_quantity: listData.cart[index].order_quantity,
+                            quantity: value.quantity
+                        })
+                    })
+                    // console.log(cartList);
+                    res.status(200).json(cartList);
                 }).catch(() => {
                     res.status(500).json({ error: "Unable to get the wishlist data" });
                 })
