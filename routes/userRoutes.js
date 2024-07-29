@@ -2,6 +2,9 @@ const express = require('express');
 const userController = require('../controllers/userController');
 const userRouter = express.Router();
 
+userRouter.post('/login', userController.login)
+userRouter.post('/register', userController.register)
+
 userRouter.get('/:id', userController.wishlist);
 userRouter.get('/list/:id', userController.listOfWishlist);
 userRouter.get('/cart/:id', userController.userCart);

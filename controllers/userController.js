@@ -1,5 +1,33 @@
 const { getDb } = require('../db');
-// const userRef = getDb().collection('users')
+const User = require('../models/userModel');
+const { createToken, errorResponse } = require('../methods');
+
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.login(email, password);
+        const token = createToken(user._id);
+
+        res.status(200).json({ fullname: user.fullname, email, token, cart: user.cart, wishlist: user.wishlist })
+    } catch (error) {
+        // console.log(error.message)
+        errorResponse(res, error);
+    }
+}
+
+const register = async (req, res) => {
+    try {
+        const { fullname, email, password } = req.body;
+        const user = await User.register(fullname, email, password);
+        const token = createToken(user._id);
+
+        res.status(200).json({ fullname: user.fullname, email, token, cart: user.cart, wishlist: user.wishlist })
+    } catch (error) {
+        // console.log(error.message)
+        errorResponse(res, error);
+    }
+}
+
 const addUser = (req, res) => {
     const data = req.body;
     // res.status(200).json(req.body);
@@ -25,12 +53,6 @@ const addUser = (req, res) => {
             res.status(500).json({ error: "Unable to connect" })
         })
 }
-
-// Increasing or decreasing the product order quantity
-// const updateOrderQuantity = (req, res) => {
-//     getDb().collection('users')
-//         .updateOne({ _id: req.params.id })
-// }
 
 // Users whishlist products
 const userWishlist = (req, res) => {
@@ -165,5 +187,7 @@ module.exports = {
     userCart,
     listOfCart,
     addOrRemoveFromCart,
-    addUser
+    addUser,
+    login,
+    register
 }
