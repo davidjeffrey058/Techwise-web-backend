@@ -16,8 +16,20 @@ const jsonResponse = (res, jsonObject, statusCode = 200) => {
     return res.status(statusCode).json(jsonObject);
 }
 
+const createOtp = () => {
+    let randomNumbers = '';
+    for (let i = 0; i < 6; i++) {
+        const number = Math.floor(Math.random() * 10);
+        randomNumbers += number.toString();
+    }
+    return randomNumbers;
+}
+
+
+
 module.exports = {
     createToken,
     errorResponse,
-    jsonResponse
+    jsonResponse,
+    createOtp,
 }

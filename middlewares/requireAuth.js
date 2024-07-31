@@ -12,7 +12,7 @@ const requireAuth = async (req, res, next) => {
         const token = authorization.split(' ')[1];
 
         const { _id } = jwt.verify(token, process.env.SECRET);
-        req.user = await User.findOne({ _id }).select('_id');
+        req.user = await User.findOne({ _id }).select('_id email cart wishlist');
         next();
 
     } catch (error) {

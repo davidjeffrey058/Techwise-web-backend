@@ -13,10 +13,11 @@ const tokenSchema = new Schema({
     },
     created_at: {
         type: Date,
-        required: true
+        default: Date.now(),
+        expires: 3600
     },
-    type: {
-        type: String,
+    for_pass: {
+        type: Boolean,
         required: true
     }
 });
