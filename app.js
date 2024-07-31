@@ -1,4 +1,3 @@
-const { connectToDb } = require('./db');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const express = require('express');
@@ -9,27 +8,22 @@ const cors = require('cors');
 const port = process.env.PORT || 8000;
 
 app.use(express.json());
-// app.use((req, res, next) => {
-//     const allowedOrigins = ['http://localhost:3000', 'http://192.168.43.71:3000', 'https://techwise-5b269.web.app'];
-//     const origin = req.headers.origin;
-
-//     if (allowedOrigins.includes(origin)) {
-//         res.setHeader('Access-Control-Allow-Origin', origin);
-//     }
-
-//     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-//     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-//     next();
-// });
 app.use(cors());
 
+app.set("view engine", "ejs");
+app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
 
-// connectToDb((err) => {
-//     if (err) throw err;
-//     app.listen(port, () => {
-//         console.log('listening at port 8080')
-//     });
-// })
+app.get("/", (req, res) => {
+    res.redirect("/api/products/all");
+});
+
+app.use('/api/products', productRoute);
+app.use('/api/users', userRoute);
+
+app.use((req, res) => {
+    res.status(404).render('404', { title: '404 Page Not Found' });
+});
 
 mongoose.connect(process.env.DB_URL).then(() => {
     app.listen(port, () => {
@@ -40,9 +34,3 @@ mongoose.connect(process.env.DB_URL).then(() => {
         console.log(error.message)
     })
 
-app.get("/", (req, res) => {
-    res.redirect("/api/product");
-});
-
-app.use('/api/products', productRoute);
-app.use('/api/users', userRoute);

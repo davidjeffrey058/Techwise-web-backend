@@ -22,6 +22,7 @@ const allProducts = async (req, res) => {
 const singleProduct = async (req, res) => {
     try {
         const product = await Product.findOne({ _id: req.params.id });
+        if (!product) throw new CustomError('Product not found', 404);
         jsonResponse(res, { product })
     } catch (error) {
         errorResponse(res, error);
@@ -42,33 +43,20 @@ const byCategory = async (req, res) => {
 }
 
 // Search a product
-const search = async (req, res) => {
-
-    // getDb().collection('products')
-    // .find({
-    //     $or: [
-    //         { name: { $regex: query, $options: 'i' } },
-
-    //     ]
-    // })
-    // .toArray()
-    // .then(data => res.status(200).json(data))
-    // .catch(() => res.status(500).json({ error: "Can't get data" }));
+const productSearch = async (req, res) => {
     try {
-
         const query = req.query.q;
-        // console.log(query);
-        // const result = await Product.find({
-        //     $or: [
-        //         { name: { $regex: query, $options: 'i' } },
-        //         { category: { $regex: query, $options: 'i' } }
-        //     ]
-        // })
-        // if (result.length === 0) throw new CustomError('No search result found', 404);
+        if (!query) throw new CustomError('Invalid query parameter', 400)
+        const result = await Product.find({
+            $or: [
+                { name: { $regex: query, $options: 'i' } },
+                { category: { $regex: query, $options: 'i' } }
+            ]
+        })
+        if (result.length === 0) throw new CustomError('No search result found', 404);
 
-        jsonResponse(res, { query })
+        jsonResponse(res, { result })
     } catch (error) {
-        console.log(error.message)
         errorResponse(res, error);
     }
 }
@@ -117,6 +105,6 @@ module.exports = {
     singleProduct,
     byCategory,
     addProduct,
-    search,
+    productSearch,
     wishOrCart
 }
