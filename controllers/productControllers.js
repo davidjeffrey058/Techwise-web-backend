@@ -1,73 +1,102 @@
-const { getDb } = require('../db');
+const { errorResponse, jsonResponse } = require('../methods');
+const CustomError = require('../models/customError');
+const Product = require('../models/productModel');
 
-// ---- ALL GET REQUEST METHOD ----
 // Get all products
-const allProducts = (req, res) => {
-    getDb().collection("products")
-        .find({}, { name: 1, price: 1, num_of_reviews: 1, total_rating: 1, image_urls: 1 })
-        .toArray()
-        .then((products) => {
-            res.status(200).json(products);
-        })
-        .catch(() => {
-            res.status(500).json({ error: "Unable to get data" });
-        });
+const allProducts = async (req, res) => {
+    try {
+        const interval = req.query.interval || 0;
+        const productsPerInterval = 10;
+
+        const products = await Product.find()
+            .skip(interval * productsPerInterval)
+            .limit(productsPerInterval);
+
+        jsonResponse(res, { products })
+    } catch (error) {
+        errorResponse(res, error);
+    }
 }
 
 // Get a single product by id
-const singleProduct = (req, res) => {
-    getDb().collection('products')
-        .findOne({ _id: req.params.id })
-        .then(data => {
-            res.status(200).json(data);
-        })
-        .catch(() => {
-            res.status(500).json({ error: "Unable to get the data" });
-        })
+const singleProduct = async (req, res) => {
+    try {
+        const product = await Product.findOne({ _id: req.params.id });
+        if (!product) throw new CustomError('Product not found', 404);
+        jsonResponse(res, { product })
+    } catch (error) {
+        errorResponse(res, error);
+    }
 }
 
 // Get a products by category
-const byCategory = (req, res) => {
-    const category = req.params.cat;
-    getDb().collection('products')
-        .find({ category: category })
-        .toArray()
-        .then(data => {
-            res.status(200).json(data);
-        })
-        .catch(() => {
-            res.status(500).json({ error: 'Can\'t get the data' });
-        })
+const byCategory = async (req, res) => {
+    try {
+        const products = await Product.find({ category: req.params.cat });
+        if (products.length === 0) throw new CustomError('No products found', 404);
+
+        jsonResponse(res, { products })
+    } catch (error) {
+        console.log(error);
+        errorResponse(res, error);
+    }
 }
 
 // Search a product
-const search = (req, res) => {
-    const query = req.params.q;
-    getDb().collection('products')
-        .find({
+const productSearch = async (req, res) => {
+    try {
+        const query = req.query.q;
+        if (!query) throw new CustomError('Invalid query parameter', 400)
+        const result = await Product.find({
             $or: [
                 { name: { $regex: query, $options: 'i' } },
                 { category: { $regex: query, $options: 'i' } }
             ]
         })
-        .toArray()
-        .then(data => res.status(200).json(data))
-        .catch(() => res.status(500).json({ error: "Can't get data" }));
+        if (result.length === 0) throw new CustomError('No search result found', 404);
+
+        jsonResponse(res, { result })
+    } catch (error) {
+        errorResponse(res, error);
+    }
+}
+
+const wishOrCart = async (req, res) => {
+    try {
+        const query = req.query.p;
+        const { wishlist, cart } = req.body;
+        if (!query) throw new CustomError('Invalid query parameter', 400);
+
+        if (query === 'WISH') {
+
+            const userWishlist = await Product.find({ _id: { $in: wishlist } });
+            jsonResponse(res, { wishlist: userWishlist })
+        } else if (query === 'CART') {
+
+            const userCart = await Product.find({ _id: { $in: cart } });
+            jsonResponse(res, { cart: userCart })
+
+        } else {
+            throw new CustomError('Invalid query parameter', 400);
+        }
+
+    } catch (error) {
+        // console.log(error);
+        errorResponse(res, error);
+    }
 }
 
 
-// --- ALL POST REQUEST METHOD ---
+
 // Add a product
-const addProduct = (req, res) => {
-    client
-        .db().collection("products")
-        .insertOne(req.body)
-        .then((response) => {
-            res.status(200).json(response);
-        })
-        .catch(() => {
-            res.status(500).json({ error: "Unable to add data" });
-        });
+const addProduct = async (req, res) => {
+    try {
+        const result = await Product.create(req.body);
+        jsonResponse(res, { result })
+    } catch (error) {
+        // console.log(error.message)
+        errorResponse(res, error);
+    }
 }
 
 
@@ -76,5 +105,6 @@ module.exports = {
     singleProduct,
     byCategory,
     addProduct,
-    search,
+    productSearch,
+    wishOrCart
 }
