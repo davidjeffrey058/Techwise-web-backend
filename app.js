@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const productRoute = require('./routes/productRoutes');
 const userRoute = require('./routes/userRoutes');
+const categoryRoute = require('./routes/categoryRoutes');
 const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 8000;
@@ -18,8 +19,9 @@ app.get("/", (req, res) => {
     res.redirect("/api/products/all");
 });
 
-app.use('/api/products', productRoute);
 app.use('/api/users', userRoute);
+app.use('/api/categories', categoryRoute);
+app.use('/api/products', productRoute);
 
 app.use((req, res) => {
     res.status(404).render('404', { title: '404 Page Not Found' });

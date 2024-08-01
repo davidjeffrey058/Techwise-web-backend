@@ -10,7 +10,12 @@ const categorySchema = new Schema({
         ref: 'Users'
     },
     category_image: {
-        type: String
+        type: String,
+        required: true
+    },
+    image_name: {
+        type: String,
+        required: true
     }
 });
 
