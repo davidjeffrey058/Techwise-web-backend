@@ -4,11 +4,6 @@ const productRoute = express.Router();
 const requireAuth = require('../middlewares/requireAuth');
 const isAdmin = require('../middlewares/isAdmin');
 
-// All users previlages
-// productRoute.use((req, res, next) => {
-//     console.log(req.path);
-//     next();
-// })
 
 productRoute.get('/all', productController.allProducts);
 productRoute.get('/single/:id', productController.singleProduct);
@@ -17,7 +12,7 @@ productRoute.get('/search', productController.productSearch);
 
 // Authenticated user previlages
 productRoute.use(requireAuth);
-productRoute.post('/user-product', productController.wishOrCart);
+productRoute.get('/wishlist-cart', productController.wishOrCart);
 
 // Admin user previlages
 productRoute.use(isAdmin);

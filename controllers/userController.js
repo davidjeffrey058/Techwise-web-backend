@@ -3,6 +3,7 @@ const Token = require('../models/tokenModel');
 const sendEmail = require('../utils/sendEmail');
 const { createToken, errorResponse, jsonResponse, createOtp } = require('../methods');
 const CustomError = require('../models/customError');
+const { isValidObjectId } = require('mongoose');
 
 const emailSent = async (otp, email) => {
     return await sendEmail(email, 'Verify your email address', `Enter the following code in the application to verify your account:\n 
@@ -145,14 +146,27 @@ const resetPassword = async (req, res) => {
 }
 
 // Add an item to cart
-const addOrRemoveFromCart = async (req, res) => {
+const addOrRemoveFromCartOrWishlist = async (req, res) => {
     try {
-        if (req.body.added) {
-            await User.updateOne({ _id: req.params.id }, { $pull: { cart: req.body.product } });
+        const userId = req.user._id;
+        const { product, added } = req.body;
+        const option = req.query.option;
+        var userFieldObject;
+
+        if (option === 'WISH') {
+            userFieldObject = { wishlist: product };
+        } else if (option === 'CART') {
+            userFieldObject = { cart: product };
+        } else {
+            throw new CustomError('Invalid query parameter', 400);
+        }
+
+        if (added) {
+            await User.updateOne({ _id: userId }, { $pull: userFieldObject });
             jsonResponse(res, { isAdded: false });
         } else {
-            await User.updateOne({ _id: req.params.id }, { $push: { cart: req.body.product } });
-            jsonResponse(res, { isAdded: false });
+            await User.updateOne({ _id: userId }, { $push: userFieldObject });
+            jsonResponse(res, { isAdded: true });
         }
 
     } catch (error) {
@@ -160,25 +174,9 @@ const addOrRemoveFromCart = async (req, res) => {
     }
 }
 
-// Add or remove a product from cart
-const addOrRemoveWish = async (req, res) => {
-    try {
-        if (req.body.added) {
-            await User.updateOne({ _id: req.params.id }, { $pull: { wishlist: req.body.product } });
-            jsonResponse(res, { isAdded: false });
-        } else {
-            await User.updateOne({ _id: req.params.id }, { $push: { wishlist: req.body.product } });
-            jsonResponse(res, { isAdded: false });
-        }
-
-    } catch (error) {
-        errorResponse(res, error);
-    }
-}
 
 module.exports = {
-    addOrRemoveWish,
-    addOrRemoveFromCart,
+    addOrRemoveFromCartOrWishlist,
     login,
     register,
     verify,

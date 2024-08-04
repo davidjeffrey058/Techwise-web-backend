@@ -22,9 +22,9 @@ const deleteCategory = async (req, res) => {
 
         const storage = getStorage(app);
 
-        const desertRef = ref(storage, `categories/${category.category_name}`);
+        const catRef = ref(storage, `categories/${category.category_name}`);
 
-        await deleteObject(desertRef);
+        await deleteObject(catRef);
 
         await Category.deleteOne({ _id: id });
 

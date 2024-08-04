@@ -4,9 +4,9 @@ const CustomError = require('../models/customError');
 
 const isAdmin = async (req, res, next) => {
     try {
-        const id = req.user;
+        const { _id } = req.user;
         // console.log(id)
-        const user = await Users.findOne({ _id: id });
+        const user = await Users.findOne({ _id });
 
         if (!user) throw new CustomError('User not found', 404);
 
