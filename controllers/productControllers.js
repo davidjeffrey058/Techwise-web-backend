@@ -1,3 +1,4 @@
+const { isValidObjectId } = require('mongoose');
 const { errorResponse, jsonResponse } = require('../methods');
 const CustomError = require('../models/customError');
 const Product = require('../models/productModel');
@@ -21,7 +22,9 @@ const allProducts = async (req, res) => {
 // Get a single product by id
 const singleProduct = async (req, res) => {
     try {
-        const product = await Product.findOne({ _id: req.params.id });
+        const id = req.params.id;
+        if (!isValidObjectId(id)) throw new CustomError('Invalid product id', 400);
+        const product = await Product.findOne({ _id: id });
         if (!product) throw new CustomError('Product not found', 404);
         jsonResponse(res, { product })
     } catch (error) {
@@ -63,17 +66,18 @@ const productSearch = async (req, res) => {
 
 const wishOrCart = async (req, res) => {
     try {
+        const user = req.user;
         const query = req.query.p;
-        const { wishlist, cart } = req.body;
+        // const { wishlist, cart } = req.body;
         if (!query) throw new CustomError('Invalid query parameter', 400);
 
         if (query === 'WISH') {
 
-            const userWishlist = await Product.find({ _id: { $in: wishlist } });
+            const userWishlist = await Product.find({ _id: { $in: user.wishlist } });
             jsonResponse(res, { wishlist: userWishlist })
         } else if (query === 'CART') {
 
-            const userCart = await Product.find({ _id: { $in: cart } });
+            const userCart = await Product.find({ _id: { $in: user.cart } });
             jsonResponse(res, { cart: userCart })
 
         } else {

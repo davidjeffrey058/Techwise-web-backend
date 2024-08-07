@@ -5,39 +5,14 @@ const Schema = mongoose.Schema;
 const validator = require('validator');
 
 const userSchema = new Schema({
-    fullname: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    verified: {
-        type: Boolean,
-        default: false
-    },
-    is_admin: {
-        type: Boolean,
-        default: false
-    },
-    cart: {
-        type: Array,
-        default: []
-    },
-    wishlist: {
-        type: Array,
-        default: []
-    },
-    phone: {
-        type: String,
-        required: false
-    }
+    fullname: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: false, },
+    verified: { type: Boolean, default: false },
+    is_admin: { type: Boolean, default: false },
+    cart: { type: Array, default: [] },
+    wishlist: { type: Array, default: [] },
+    image_url: { type: String, required: false }
 });
 
 userSchema.statics.login = async function (email, password) {

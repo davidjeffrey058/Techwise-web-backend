@@ -9,30 +9,56 @@ const emailSent = async (otp, email) => {
         ${otp}\n\n This code expires in 1 hour`);
 }
 
+const GoogleAuth = async (accessToken, res) => {
+    const result = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+
+    if (result.error) throw new CustomError(result.error_description, 401);
+
+    const fullname = result.data.given_name + ' ' + result.data.family_name;
+    const email = result.data.email;
+    const image_url = result.data.picture;
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+        const token = createToken(user._id);
+        return jsonResponse(res, { fullname, email, token, image_url });
+    }
+
+    const createdUser = await User.create({ fullname, email, verified: true, image_url });
+    return jsonResponse(res, { fullname, email, token: createToken(createdUser._id), image_url });
+}
+
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await User.login(email, password);
+        if (req.body.google_access_token) {
+            await GoogleAuth(req.body.google_access_token, res);
+        } else {
+            const { email, password } = req.body;
+            const user = await User.login(email, password);
 
-        if (!user.verified) {
-            const token = await Token.findOne({ user_id: user._id, for_pass: false });
+            if (!user.verified) {
+                const token = await Token.findOne({ user_id: user._id, for_pass: false });
 
-            if (token) {
-                return jsonResponse(res, { message: 'Otp already sent to your email please verify account' }, 201);
+                if (token) {
+                    return jsonResponse(res, { message: 'Otp already sent to your email please verify account' }, 201);
+                }
+
+                const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
+
+                const sent = await emailSent(result.token, email);
+
+                if (!sent) throw new CustomError("Unable to send email verification otp", 500);
+
+                return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
+
             }
 
-            const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
-
-            const sent = await emailSent(result.token, email);
-
-            if (!sent) throw new CustomError("Unable to send email verification otp", 500);
-
-            return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
-
+            const token = createToken(user._id);
+            jsonResponse(res, { fullname: user.fullname, email: user.email, token, image_url: user.image_url });
         }
-
-        const token = createToken(user._id);
-        jsonResponse(res, { fullname: user.fullname, email: user.email, token });
 
     } catch (error) {
         // console.log(error.message)
@@ -42,16 +68,24 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { fullname, email, password } = req.body;
-        const user = await User.register(fullname, email, password);
 
-        const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
+        // Register with google Signup method
+        if (req.body.google_access_token) {
+            await GoogleAuth(req.body.google_access_token, res);
+        } else {
 
-        const sent = await emailSent(result.token, email);
+            // Email and Password signup method
+            const { fullname, email, password } = req.body;
+            const user = await User.register(fullname, email, password);
 
-        if (!sent) throw new CustomError("Unable to send email verification otp", 500);
+            const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
 
-        return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
+            const sent = await emailSent(result.token, email);
+
+            if (!sent) throw new CustomError("Unable to send email verification otp", 500);
+
+            return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
+        }
     } catch (error) {
         // console.log(error.message)
         errorResponse(res, error);
@@ -145,14 +179,27 @@ const resetPassword = async (req, res) => {
 }
 
 // Add an item to cart
-const addOrRemoveFromCart = async (req, res) => {
+const addOrRemoveFromCartOrWishlist = async (req, res) => {
     try {
-        if (req.body.added) {
-            await User.updateOne({ _id: req.params.id }, { $pull: { cart: req.body.product } });
+        const userId = req.user._id;
+        const { product, added } = req.body;
+        const option = req.query.option;
+        var userFieldObject;
+
+        if (option === 'WISH') {
+            userFieldObject = { wishlist: product };
+        } else if (option === 'CART') {
+            userFieldObject = { cart: product };
+        } else {
+            throw new CustomError('Invalid query parameter', 400);
+        }
+
+        if (added) {
+            await User.updateOne({ _id: userId }, { $pull: userFieldObject });
             jsonResponse(res, { isAdded: false });
         } else {
-            await User.updateOne({ _id: req.params.id }, { $push: { cart: req.body.product } });
-            jsonResponse(res, { isAdded: false });
+            await User.updateOne({ _id: userId }, { $push: userFieldObject });
+            jsonResponse(res, { isAdded: true });
         }
 
     } catch (error) {
@@ -160,25 +207,9 @@ const addOrRemoveFromCart = async (req, res) => {
     }
 }
 
-// Add or remove a product from cart
-const addOrRemoveWish = async (req, res) => {
-    try {
-        if (req.body.added) {
-            await User.updateOne({ _id: req.params.id }, { $pull: { wishlist: req.body.product } });
-            jsonResponse(res, { isAdded: false });
-        } else {
-            await User.updateOne({ _id: req.params.id }, { $push: { wishlist: req.body.product } });
-            jsonResponse(res, { isAdded: false });
-        }
-
-    } catch (error) {
-        errorResponse(res, error);
-    }
-}
 
 module.exports = {
-    addOrRemoveWish,
-    addOrRemoveFromCart,
+    addOrRemoveFromCartOrWishlist,
     login,
     register,
     verify,

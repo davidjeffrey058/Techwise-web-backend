@@ -4,6 +4,7 @@ const express = require('express');
 const productRoute = require('./routes/productRoutes');
 const userRoute = require('./routes/userRoutes');
 const categoryRoute = require('./routes/categoryRoutes');
+const addressRoute = require('./routes/addressRoute');
 const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 8000;
@@ -15,13 +16,19 @@ app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
+
 app.get("/", (req, res) => {
-    res.redirect("/api/products/all");
+    res.redirect('/home');
+});
+
+app.get('/home', (req, res) => {
+    res.render('home', { title: 'Home' });
 });
 
 app.use('/api/users', userRoute);
 app.use('/api/categories', categoryRoute);
 app.use('/api/products', productRoute);
+app.use('/api/address', addressRoute);
 
 app.use((req, res) => {
     res.status(404).render('404', { title: '404 Page Not Found' });

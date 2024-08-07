@@ -39,6 +39,10 @@ body.center {
     width: 500px;
 }
 
+.link {
+    text-decoration: none;
+}
+
 
 @media screen and (max-width: 992px) {}
 

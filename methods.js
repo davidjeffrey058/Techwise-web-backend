@@ -25,6 +25,11 @@ const createOtp = () => {
     return randomNumbers;
 }
 
+const isValidPhoneNumber = (phoneNumber) => {
+    const ghanaPhoneRegex = /^(?:\+233|0)[23]\d{8}$/;
+    return ghanaPhoneRegex.test(phoneNumber);
+}
+
 
 
 module.exports = {
@@ -32,4 +37,5 @@ module.exports = {
     errorResponse,
     jsonResponse,
     createOtp,
+    isValidPhoneNumber,
 }

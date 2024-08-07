@@ -11,8 +11,7 @@ userRouter.post('/:email/change-password/:token', userController.changePassword)
 userRouter.post('/pass-reset-otp', userController.resetPassword);
 
 userRouter.use(requireAuth);
-userRouter.post('/list/:id', userController.addOrRemoveWish);
-userRouter.post('/cart/:id', userController.addOrRemoveFromCart);
+userRouter.post('/cart-wishlist', userController.addOrRemoveFromCartOrWishlist);
 
 
 module.exports = userRouter;
