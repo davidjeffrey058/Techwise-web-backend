@@ -3,37 +3,62 @@ const Token = require('../models/tokenModel');
 const sendEmail = require('../utils/sendEmail');
 const { createToken, errorResponse, jsonResponse, createOtp } = require('../methods');
 const CustomError = require('../models/customError');
-const { isValidObjectId } = require('mongoose');
 
 const emailSent = async (otp, email) => {
     return await sendEmail(email, 'Verify your email address', `Enter the following code in the application to verify your account:\n 
         ${otp}\n\n This code expires in 1 hour`);
 }
 
+const GoogleAuth = async (accessToken, res) => {
+    const result = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+
+    if (result.error) throw new CustomError(result.error_description, 401);
+
+    const fullname = result.data.given_name + ' ' + result.data.family_name;
+    const email = result.data.email;
+    const image_url = result.data.picture;
+
+    const user = await User.findOne({ email });
+
+    if (user) {
+        const token = createToken(user._id);
+        return jsonResponse(res, { fullname, email, token, image_url });
+    }
+
+    const createdUser = await User.create({ fullname, email, verified: true, image_url });
+    return jsonResponse(res, { fullname, email, token: createToken(createdUser._id), image_url });
+}
+
 const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
-        const user = await User.login(email, password);
+        if (req.body.google_access_token) {
+            await GoogleAuth(req.body.google_access_token, res);
+        } else {
+            const { email, password } = req.body;
+            const user = await User.login(email, password);
 
-        if (!user.verified) {
-            const token = await Token.findOne({ user_id: user._id, for_pass: false });
+            if (!user.verified) {
+                const token = await Token.findOne({ user_id: user._id, for_pass: false });
 
-            if (token) {
-                return jsonResponse(res, { message: 'Otp already sent to your email please verify account' }, 201);
+                if (token) {
+                    return jsonResponse(res, { message: 'Otp already sent to your email please verify account' }, 201);
+                }
+
+                const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
+
+                const sent = await emailSent(result.token, email);
+
+                if (!sent) throw new CustomError("Unable to send email verification otp", 500);
+
+                return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
+
             }
 
-            const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
-
-            const sent = await emailSent(result.token, email);
-
-            if (!sent) throw new CustomError("Unable to send email verification otp", 500);
-
-            return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
-
+            const token = createToken(user._id);
+            jsonResponse(res, { fullname: user.fullname, email: user.email, token, image_url: user.image_url });
         }
-
-        const token = createToken(user._id);
-        jsonResponse(res, { fullname: user.fullname, email: user.email, token });
 
     } catch (error) {
         // console.log(error.message)
@@ -43,16 +68,24 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { fullname, email, password } = req.body;
-        const user = await User.register(fullname, email, password);
 
-        const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
+        // Register with google Signup method
+        if (req.body.google_access_token) {
+            await GoogleAuth(req.body.google_access_token, res);
+        } else {
 
-        const sent = await emailSent(result.token, email);
+            // Email and Password signup method
+            const { fullname, email, password } = req.body;
+            const user = await User.register(fullname, email, password);
 
-        if (!sent) throw new CustomError("Unable to send email verification otp", 500);
+            const result = await Token.create({ user_id: user._id, token: createOtp(), for_pass: false });
 
-        return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
+            const sent = await emailSent(result.token, email);
+
+            if (!sent) throw new CustomError("Unable to send email verification otp", 500);
+
+            return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
+        }
     } catch (error) {
         // console.log(error.message)
         errorResponse(res, error);
