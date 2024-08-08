@@ -142,12 +142,9 @@ const addProduct = async (req, res) => {
             sub_category,
             total_rating,
         });
-
-        
+                
         jsonResponse(res, {result})
 
-        // const result = await Product.create(req.body);
-        // jsonResponse(res, { result })
     } catch (error) {
         console.log(error.message)
         errorResponse(res, error);
