@@ -2,6 +2,8 @@ const { isValidObjectId } = require('mongoose');
 const { errorResponse, jsonResponse } = require('../methods');
 const CustomError = require('../models/customError');
 const Product = require('../models/productModel');
+const {uploadBytesResumable, getStorage, getDownloadURL, ref} = require('firebase/storage');
+const app = require('../services/firebase');
 
 // Get all products
 const allProducts = async (req, res) => {
@@ -95,10 +97,59 @@ const wishOrCart = async (req, res) => {
 // Add a product
 const addProduct = async (req, res) => {
     try {
-        const result = await Product.create(req.body);
-        jsonResponse(res, { result })
+        const {
+            name,
+            description,
+            category,
+            key_properties,
+            num_of_reviews,
+            price,
+            quantity,
+            sub_category,
+            total_rating,
+        } = req.body;
+
+
+        const files = req.files;
+
+        if(!files) throw new CustomError('Add at least a file', 400);
+
+        const storage = getStorage(app);
+        let image_urls = [];
+
+        for (var i = 0; i < files.length; i++){
+            const storageRef = ref(storage, `products/${files[i].originalname + Date.now()}`);
+            const metadata = {
+                contentType: files[i].mimetype
+            }
+
+            const results = await uploadBytesResumable(storageRef, files[i].buffer, metadata);
+
+            const downloadUrl = await getDownloadURL(results.ref);
+            
+            image_urls.push(downloadUrl);
+        }
+
+        const result = await Product.create({
+            name,
+            description,
+            category,
+            key_properties: JSON.parse(key_properties),
+            num_of_reviews,
+            price,
+            image_urls,
+            quantity,
+            sub_category,
+            total_rating,
+        });
+
+        
+        jsonResponse(res, {result})
+
+        // const result = await Product.create(req.body);
+        // jsonResponse(res, { result })
     } catch (error) {
-        // console.log(error.message)
+        console.log(error.message)
         errorResponse(res, error);
     }
 }

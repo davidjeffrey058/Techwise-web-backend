@@ -1,15 +1,10 @@
 const express = require('express');
 const isAdmin = require('../middlewares/isAdmin');
 const categoryController = require('../controllers/categoryController');
-const multer = require('multer');
+const upload = require('../utils/upload');
 const requireAuth = require('../middlewares/requireAuth');
 
-const upload = multer({
-    storage: multer.memoryStorage(),
-});
-
 const categoryRouter = express.Router();
-
 categoryRouter.get('', categoryController.getAllCategories);
 
 categoryRouter.use(requireAuth);
