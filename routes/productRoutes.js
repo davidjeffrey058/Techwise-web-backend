@@ -3,6 +3,8 @@ const productController = require('../controllers/productControllers');
 const productRoute = express.Router();
 const requireAuth = require('../middlewares/requireAuth');
 const isAdmin = require('../middlewares/isAdmin');
+const upload = require('../utils/upload');
+
 
 
 productRoute.get('/all', productController.allProducts);
@@ -16,7 +18,7 @@ productRoute.get('/wishlist-cart', productController.wishOrCart);
 
 // Admin user previlages
 productRoute.use(isAdmin);
-productRoute.post('/upload', productController.addProduct);
+productRoute.post('/upload',upload.array('files', 10), productController.addProduct);
 productRoute.delete('/:id', (req, res) => { });
 productRoute.patch('/:id', (req, res) => { });
 

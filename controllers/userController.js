@@ -3,13 +3,18 @@ const Token = require('../models/tokenModel');
 const sendEmail = require('../utils/sendEmail');
 const { createToken, errorResponse, jsonResponse, createOtp } = require('../methods');
 const CustomError = require('../models/customError');
+const { isValidObjectId } = require('mongoose');
+const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage');
+const app = require('../services/firebase');
+const validator = require('validator');
+const bcrypt = require('bcrypt');
 
-const emailSent = async (otp, email) => {
+async function emailSent(otp, email) {
     return await sendEmail(email, 'Verify your email address', `Enter the following code in the application to verify your account:\n 
         ${otp}\n\n This code expires in 1 hour`);
 }
 
-const GoogleAuth = async (accessToken, res) => {
+async function GoogleAuth(accessToken, res) {
     const result = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: { 'Authorization': `Bearer ${accessToken}` }
     });
@@ -84,7 +89,7 @@ const register = async (req, res) => {
 
             if (!sent) throw new CustomError("Unable to send email verification otp", 500);
 
-            return jsonResponse(res, { message: 'Otp sent to your email please verify account' }, 201)
+            return jsonResponse(res, { message: 'Otp sent to your email please verify account', user_id: user._id }, 201)
         }
     } catch (error) {
         // console.log(error.message)
@@ -94,12 +99,13 @@ const register = async (req, res) => {
 
 const verify = async (req, res) => {
     try {
-        const { email, token } = req.params;
+        const { uid, token } = req.params;
         const type = req.query.type;
+        if (!isValidObjectId(uid)) throw new CustomError('Not a valid user id', 400);
 
         if (type === 'password-reset-verify') {
 
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ _id: uid });
             if (!user) throw new CustomError('User not found', 404);
 
             const passwordToken = await Token.findOne({ user_id: user._id, token, for_pass: true });
@@ -109,13 +115,13 @@ const verify = async (req, res) => {
 
         } else if (type === 'email-verify') {
 
-            const user = await User.findOne({ email });
+            const user = await User.findOne({ _id: uid });
             if (!user) throw new CustomError('Invalid OTP', 401);
 
             const emailVerifyToken = await Token.findOne({ user_id: user._id, token, for_pass: false });
             if (!emailVerifyToken) throw new CustomError('Invalid OTP', 400);
 
-            await User.updateOne({ email }, { $set: { verified: true } });
+            await User.updateOne({ _id: user._id }, { $set: { verified: true } });
             await Token.deleteOne({ user_id: user._id, for_pass: false });
 
             jsonResponse(res, { message: "Email verified successfully" });
@@ -129,20 +135,24 @@ const verify = async (req, res) => {
 
 const changePassword = async (req, res) => {
     try {
-        const { email, token } = req.params;
+        const { uid, token } = req.params;
         const { password } = req.body;
+        if (!validator.isStrongPassword(password)) throw new CustomError('Password must contain a number, a special character, a capital letter, and must be 8 characters long', 400);
+        if (!isValidObjectId(uid)) throw new CustomError('Invalid user id', 401);
 
-        const user = User.findOne({ email });
+        const user = await User.findOne({ _id: uid });
+        if (!user) throw new CustomError('Unauthorized request', 401);
 
         const passwordToken = await Token.findOne({ user_id: user._id, token });
+
         if (!passwordToken) throw new CustomError('OTP has expired', 400);
 
         const hash = await bcrypt.hash(password, Number(process.env.SALT));
 
         if (user.verified) {
-            await User.updateOne({ email }, { $set: { password: hash } });
+            await User.updateOne({ _id: user._id }, { $set: { password: hash } });
         } else {
-            await User.updateOne({ email }, { $set: { password: hash, verified: true } });
+            await User.updateOne({ _id: user._id }, { $set: { password: hash, verified: true } });
         }
 
         await Token.deleteOne({ user_id: user._id });
@@ -156,51 +166,90 @@ const changePassword = async (req, res) => {
 const resetPassword = async (req, res) => {
     try {
         const { email } = req.body;
+        if (!validator.isEmail(email)) throw new CustomError('Enter a valid email address', 400);
 
         const user = await User.findOne({ email });
         if (!user) throw new CustomError('Email not found', 404);
 
-        var token = await Token.findOne({ user_id: user._id });
+        const available = await Token.findOne({ user_id: user._id });
+        if (available) await Token.deleteOne({ user_id: user._id });
 
-        if (token) await Token.deleteOne({ user_id: user._id });
+        const token = await Token.create({ user_id: user._id, token: createOtp(), for_pass: true });
 
-        token = await Token.create({ email, token: createOtp() });
+        const sent = await emailSent(token.token, email);
 
-        if (await emailSent(token.token, email)) {
-            jsonResponse(res, { message: "Otp sent to your email" })
+        if (sent) {
+            jsonResponse(res, { message: "Otp sent to your email", user_id: user._id })
         } else {
             throw new CustomError('Unable to send otp to your email');
         }
 
     } catch (error) {
-        // console.log(error)
+        console.log(error)
         errorResponse(res, error);
     }
 }
 
-// Add an item to cart
 const addOrRemoveFromCartOrWishlist = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { product, added } = req.body;
-        const option = req.query.option;
+        const { productId } = req.body;
+        if (!isValidObjectId(productId)) throw new CustomError('Invalid product id', 400);
+
+        const { option, add } = req.query;
+        if (!option || add === undefined) throw new CustomError('Missing query parameter(s)', 400);
+        if (/^(?!WISHLIST$|CART$).+$/.test(option)) throw new CustomError('\'option\' query parameter should be WISHLIST or CART', 400);
+        if (/^(?!true$|false$).+$/.test(add)) throw new CustomError('\'add\' query parameter should be true or false', 400);
+
         var userFieldObject;
 
-        if (option === 'WISH') {
-            userFieldObject = { wishlist: product };
-        } else if (option === 'CART') {
-            userFieldObject = { cart: product };
+        if (option === 'WISHLIST') {
+            userFieldObject = { wishlist: productId };
         } else {
-            throw new CustomError('Invalid query parameter', 400);
+            userFieldObject = { cart: productId };
         }
 
-        if (added) {
-            await User.updateOne({ _id: userId }, { $pull: userFieldObject });
-            jsonResponse(res, { isAdded: false });
-        } else {
+        if (add === 'true') {
             await User.updateOne({ _id: userId }, { $push: userFieldObject });
-            jsonResponse(res, { isAdded: true });
+            jsonResponse(res, { message: `product added to ${option.toLowerCase()}` });
+        } else {
+            await User.updateOne({ _id: userId }, { $pull: userFieldObject });
+            jsonResponse(res, { message: `product removed from ${option.toLowerCase()}` });
         }
+
+    } catch (error) {
+        errorResponse(res, error);
+    }
+}
+
+const updateUserProfile = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const file = req.file;
+        const { fullname } = req.body;
+
+        if (!file && !fullname) throw new CustomError('Enter profile fields to update', 400);
+        if (fullname.trim().length < 2) throw new CustomError('Enter a valid name', 400);
+
+        let image_url;
+
+        if (file) {
+            const storage = getStorage(app)
+
+            const storageRef = ref(storage, `profile_pictures/${userId}`);
+
+            const metadata = {
+                contentType: file.mimetype
+            }
+
+            const result = await uploadBytesResumable(storageRef, file.buffer, metadata);
+
+            image_url = await getDownloadURL(result.ref);
+        }
+
+        await User.updateOne({ _id: userId }, { $set: { fullname, image_url } })
+
+        jsonResponse(res, { message: 'Profile updated successfully' });
 
     } catch (error) {
         errorResponse(res, error);
@@ -214,5 +263,6 @@ module.exports = {
     register,
     verify,
     changePassword,
-    resetPassword
+    resetPassword,
+    updateUserProfile
 }

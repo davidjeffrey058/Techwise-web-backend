@@ -20,10 +20,10 @@ module.exports = async (email, subject, text) => {
             from: process.env.USER,
         });
 
-        console.log(result);
+        // console.log(result);
         return true;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return false;
     }
 }
