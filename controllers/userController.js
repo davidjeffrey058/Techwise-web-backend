@@ -4,13 +4,15 @@ const sendEmail = require('../utils/sendEmail');
 const { createToken, errorResponse, jsonResponse, createOtp } = require('../methods');
 const CustomError = require('../models/customError');
 const { isValidObjectId } = require('mongoose');
+const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('firebase/storage');
+const app = require('../services/firebase');
 
-const emailSent = async (otp, email) => {
+async function emailSent(otp, email) {
     return await sendEmail(email, 'Verify your email address', `Enter the following code in the application to verify your account:\n 
         ${otp}\n\n This code expires in 1 hour`);
 }
 
-const GoogleAuth = async (accessToken, res) => {
+async function GoogleAuth(accessToken, res) {
     const result = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: { 'Authorization': `Bearer ${accessToken}` }
     });
@@ -179,7 +181,6 @@ const resetPassword = async (req, res) => {
     }
 }
 
-// Add an item to cart
 const addOrRemoveFromCartOrWishlist = async (req, res) => {
     try {
         const userId = req.user._id;
@@ -212,6 +213,40 @@ const addOrRemoveFromCartOrWishlist = async (req, res) => {
     }
 }
 
+const updateUserProfile = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const file = req.file;
+        const { fullname } = req.body;
+
+        if (!file && !fullname) throw new CustomError('Enter profile fields to update', 400);
+        if (fullname.trim().length < 2) throw new CustomError('Enter a valid name', 400);
+
+        let image_url;
+
+        if (file) {
+            const storage = getStorage(app)
+
+            const storageRef = ref(storage, `profile_pictures/${userId}`);
+
+            const metadata = {
+                contentType: file.mimetype
+            }
+
+            const result = await uploadBytesResumable(storageRef, file.buffer, metadata);
+
+            image_url = await getDownloadURL(result.ref);
+        }
+
+        await User.updateOne({ _id: userId }, { $set: { fullname, image_url } })
+
+        jsonResponse(res, { message: 'Profile updated successfully' });
+
+    } catch (error) {
+        errorResponse(res, error);
+    }
+}
+
 
 module.exports = {
     addOrRemoveFromCartOrWishlist,
@@ -219,5 +254,6 @@ module.exports = {
     register,
     verify,
     changePassword,
-    resetPassword
+    resetPassword,
+    updateUserProfile
 }
