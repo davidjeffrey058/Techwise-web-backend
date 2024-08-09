@@ -3,6 +3,7 @@ const Token = require('../models/tokenModel');
 const sendEmail = require('../utils/sendEmail');
 const { createToken, errorResponse, jsonResponse, createOtp } = require('../methods');
 const CustomError = require('../models/customError');
+const { isValidObjectId } = require('mongoose');
 
 const emailSent = async (otp, email) => {
     return await sendEmail(email, 'Verify your email address', `Enter the following code in the application to verify your account:\n 
@@ -182,24 +183,28 @@ const resetPassword = async (req, res) => {
 const addOrRemoveFromCartOrWishlist = async (req, res) => {
     try {
         const userId = req.user._id;
-        const { product, added } = req.body;
-        const option = req.query.option;
+        const { productId } = req.body;
+        if (!isValidObjectId(productId)) throw new CustomError('Invalid product id', 400);
+
+        const { option, add } = req.query;
+        if (!option || add === undefined) throw new CustomError('Missing query parameter(s)', 400);
+        if (/^(?!WISHLIST$|CART$).+$/.test(option)) throw new CustomError('\'option\' query parameter should be WISHLIST or CART', 400);
+        if (/^(?!true$|false$).+$/.test(add)) throw new CustomError('\'add\' query parameter should be true or false', 400);
+
         var userFieldObject;
 
-        if (option === 'WISH') {
-            userFieldObject = { wishlist: product };
-        } else if (option === 'CART') {
-            userFieldObject = { cart: product };
+        if (option === 'WISHLIST') {
+            userFieldObject = { wishlist: productId };
         } else {
-            throw new CustomError('Invalid query parameter', 400);
+            userFieldObject = { cart: productId };
         }
 
-        if (added) {
-            await User.updateOne({ _id: userId }, { $pull: userFieldObject });
-            jsonResponse(res, { isAdded: false });
-        } else {
+        if (add === 'true') {
             await User.updateOne({ _id: userId }, { $push: userFieldObject });
-            jsonResponse(res, { isAdded: true });
+            jsonResponse(res, { message: `product added to ${option.toLowerCase()}` });
+        } else {
+            await User.updateOne({ _id: userId }, { $pull: userFieldObject });
+            jsonResponse(res, { message: `product removed from ${option.toLowerCase()}` });
         }
 
     } catch (error) {
