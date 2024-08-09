@@ -7,8 +7,8 @@ const upload = require('../utils/upload');
 userRouter.post('/login', userController.login);
 userRouter.post('/register', userController.register);
 
-userRouter.get('/:email/verify/:token', userController.verify);
-userRouter.post('/:email/change-password/:token', userController.changePassword);
+userRouter.get('/:uid/verify/:token', userController.verify);
+userRouter.post('/:uid/change-password/:token', userController.changePassword);
 userRouter.post('/pass-reset-otp', userController.resetPassword);
 
 userRouter.use(requireAuth);
