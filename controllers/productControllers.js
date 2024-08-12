@@ -2,7 +2,7 @@ const { isValidObjectId } = require('mongoose');
 const { errorResponse, jsonResponse } = require('../methods');
 const CustomError = require('../models/customError');
 const Product = require('../models/productModel');
-const {uploadBytesResumable, getStorage, getDownloadURL, ref} = require('firebase/storage');
+const { uploadBytesResumable, getStorage, getDownloadURL, ref } = require('firebase/storage');
 const app = require('../services/firebase');
 
 // Get all products
@@ -68,18 +68,18 @@ const productSearch = async (req, res) => {
 
 const wishOrCart = async (req, res) => {
     try {
-        const user = req.user;
-        const query = req.query.p;
-        // const { wishlist, cart } = req.body;
-        if (!query) throw new CustomError('Invalid query parameter', 400);
+        const { wishlist, cart } = req.user;
+        const option = req.query.option;
 
-        if (query === 'WISH') {
+        if (!option) throw new CustomError('Invalid query parameter', 400);
 
-            const userWishlist = await Product.find({ _id: { $in: user.wishlist } });
+        if (option.toLowerCase() === 'wishlist') {
+
+            const userWishlist = await Product.find({ _id: { $in: wishlist } });
             jsonResponse(res, { wishlist: userWishlist })
-        } else if (query === 'CART') {
+        } else if (option.toLowerCase() === 'cart') {
 
-            const userCart = await Product.find({ _id: { $in: user.cart } });
+            const userCart = await Product.find({ _id: { $in: cart } });
             jsonResponse(res, { cart: userCart })
 
         } else {
@@ -102,23 +102,25 @@ const addProduct = async (req, res) => {
             description,
             category,
             key_properties,
-            num_of_reviews,
+            // num_of_reviews,
             price,
             quantity,
             sub_category,
-            total_rating,
+            // total_rating,
         } = req.body;
 
+        const exists = await Product.findOne({ name });
+        if (exists) throw new CustomError('Product already exists', 400);
 
         const files = req.files;
 
-        if(!files) throw new CustomError('Add at least a file', 400);
+        if (!files) throw new CustomError('Add at least a file', 400);
 
         const storage = getStorage(app);
         let image_urls = [];
 
-        for (var i = 0; i < files.length; i++){
-            const storageRef = ref(storage, `products/${files[i].originalname + Date.now()}`);
+        for (var i = 0; i < files.length; i++) {
+            const storageRef = ref(storage, `products/${name + Date.now()}`);
             const metadata = {
                 contentType: files[i].mimetype
             }
@@ -126,7 +128,7 @@ const addProduct = async (req, res) => {
             const results = await uploadBytesResumable(storageRef, files[i].buffer, metadata);
 
             const downloadUrl = await getDownloadURL(results.ref);
-            
+
             image_urls.push(downloadUrl);
         }
 
@@ -135,15 +137,15 @@ const addProduct = async (req, res) => {
             description,
             category,
             key_properties: JSON.parse(key_properties),
-            num_of_reviews,
+            // num_of_reviews,
             price,
             image_urls,
             quantity,
             sub_category,
-            total_rating,
+            // total_rating,
         });
-                
-        jsonResponse(res, {result})
+
+        jsonResponse(res, { result })
 
     } catch (error) {
         console.log(error.message)

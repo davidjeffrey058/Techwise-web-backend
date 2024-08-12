@@ -8,6 +8,7 @@ const { getStorage, ref, uploadBytesResumable, getDownloadURL } = require('fireb
 const app = require('../services/firebase');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
 
 async function emailSent(otp, email) {
     return await sendEmail(email, 'Verify your email address', `Enter the following code in the application to verify your account:\n 
@@ -192,8 +193,9 @@ const resetPassword = async (req, res) => {
 
 const addOrRemoveFromCartOrWishlist = async (req, res) => {
     try {
-        const userId = req.user._id;
-        const { productId } = req.body;
+        const { _id: userId, cart, wishlist } = req.user;
+        const { _id: productId } = req.body;
+
         if (!isValidObjectId(productId)) throw new CustomError('Invalid product id', 400);
 
         const { option, add } = req.query;
@@ -210,9 +212,17 @@ const addOrRemoveFromCartOrWishlist = async (req, res) => {
         }
 
         if (add === 'true') {
+
+            if (option === 'WISHLIST' && wishlist.includes(productId)) throw new CustomError('Product already added to wishlist', 400);
+            if (option === 'CART' && cart.includes(productId)) throw new CustomError('Product already added to cart', 400);
+
             await User.updateOne({ _id: userId }, { $push: userFieldObject });
             jsonResponse(res, { message: `product added to ${option.toLowerCase()}` });
+
         } else {
+            if (option === 'WISHLIST' && !wishlist.includes(productId)) throw new CustomError('Product already removed from wishlist', 400);
+            if (option === 'CART' && !cart.includes(productId)) throw new CustomError('Product already removed from cart', 400);
+
             await User.updateOne({ _id: userId }, { $pull: userFieldObject });
             jsonResponse(res, { message: `product removed from ${option.toLowerCase()}` });
         }
