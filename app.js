@@ -21,9 +21,22 @@ app.get("/", (req, res) => {
     res.redirect('/home');
 });
 
+// Pages
 app.get('/home', (req, res) => {
-    res.render('home', { title: 'Home' });
+    res.redirect('/dashboard')
 });
+
+app.get('/dashboard', (req, res) => {
+    res.render('dashboard', { title: 'Dashboard' });
+})
+
+app.get('/products', (req, res) => {
+    res.render('products', {title: "Products"});
+})
+
+app.get('/analytics', (req, res) => {
+    res.render('analytics', {title: "Analytics"})
+})
 
 app.use('/api/users', userRoute);
 app.use('/api/categories', categoryRoute);

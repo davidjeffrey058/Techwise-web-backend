@@ -1,21 +1,148 @@
+:root{
+    --primary-color: #0074A6;
+    --custom-red: #DD0202;
+    --custom-orange: #ED9B2D;
+    --custom-green: #01AA58;
+    --text-primary: #262626;
+    --text-secondary: #727272;
+    --text-invert: #BEBDBD;
+    --border-invert: #BEBDBD;
+    --surface-table-head-invert: #F3F3F3;
+    --surface-secondary: #FDFDFD;
+    --surface-primary: #F8F8F8;
+    --card-color: #ffffffff;
+}
+
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: var(--surface-primary);
+    color: var(--text-primary);
 }
 
-.center {
+.flex{
     display: flex;
-    justify-content: center;
+}
+.align{
+    align-items: center;
+}
+.spc_btw{
+    justify-content: space-between;
     align-items: center;
 }
 
-body.center {
-    height: 100dvh;
+.center {
+    justify-content: center;
+    align-items: center;
+}
+.card{
+    background-color: var(--card-color);
+    border-radius: 10px;
+    box-shadow: 2px 0 6px hsla(0, 0%, 0%, 0.077);
+}
+.hover{
+   transition: background 0.2s ease-in;
+}
+.hover:hover{
+    cursor: pointer;
+    background-color: var(--surface-primary);
+}
+.link{
+    text-decoration: none;
+    color: var(--text-primary);
 }
 
+.home {
+    height: 100dvh;
+}
+.home nav{
+    background-color: var(--card-color);
+    width: 225px;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    /* border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px; */
+    /* box-shadow: 2px 0 6px hsla(0, 0%, 0%, 0.077); */
+}
+
+.web_title{
+    margin: 22.5px;
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.nav_content .flex{
+    align-items: center;
+    padding: 11.25px 15px;
+    margin-inline: 7.5px;
+    border-radius: 5px;
+}
+.nav_content .flex p{
+    margin: 0 0 0 11.25px;
+    font-size: 12px;
+}
+
+.sec_txt{
+    margin: 15px 0 12px 7.5px;
+    font-size: 12px;
+    color: var(--text-invert);
+}
+
+.content{
+    padding: 15px;
+    width: 100%;
+    overflow-y: scroll;
+}
+.hd{
+    padding: 15px;
+}
+.round_dp{
+    width: 45px;
+    height: 45px;
+    background-color: grey;
+    border-radius: 50px;
+    margin-right: 10px;
+}
+.prim{
+    font-size: 12px;
+    color: var(--text-invert);
+}
+.sec{
+    font-size: 13px;
+    color: var(--text-primary);
+    font-weight: bold;
+}
+.prim, .sec{
+    margin: 0;
+}
+
+.main{
+    margin-top: 15px;
+    background-color: var(--surface-secondary);
+    height: 100dvh;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.main_heading{
+    font-size: 16px;
+}
+.date_select{
+    border: 1px solid var(--border-invert);
+    border-radius: 5px;
+    padding: 9px;
+}
+.date_select p{
+    margin: 0 5px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+
 .custom_btn {
-    background-color: rgb(0, 102, 255);
+    background-color: var(--primary-color);
     border-radius: 10px;
     padding: 10px 20px;
     color: white;

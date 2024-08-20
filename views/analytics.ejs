@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./components/head.ejs') %>
+
+    <body class="home flex">
+       
+       <nav>
+            <a href="" class="link"><h1 class="web_title">TECHWISE</h1></a>
+            <hr color="#F8F8F8">
+            <%- include('./components/navDrawer.ejs', {index: 4}) %>
+       </nav>
+       <div class="content">
+            <%- include('./components/headerBar.ejs') %>
+            <div class="main">
+                <div class="flex spc_btw">
+                    <h2 class="main_heading">Analytics</h2>
+
+                    <div class="date_select flex align hover">
+                        <img src="/icons/calendar.png" alt="calendar" width="18px">
+                        <p>This week</p>
+                        <img src="/icons/down-chevron.png" alt="" width="18px">
+                    </div>
+
+                </div>
+                
+            </div>
+       </div>
+    </body>
+
+</html>
