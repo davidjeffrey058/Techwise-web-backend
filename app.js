@@ -22,7 +22,10 @@ app.get("/", (req, res) => {
     res.redirect('/home');
 });
 
-app.use('', pagesRoute);
+app.get('/home', (req, res) => {
+    res.render('home', { title: 'Home' });
+});
+
 app.use('/api/users', userRoute);
 app.use('/api/categories', categoryRoute);
 app.use('/api/products', productRoute);
