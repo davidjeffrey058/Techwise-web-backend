@@ -59,10 +59,6 @@ p{
     color: var(--text-primary);
 }
 
-/* .circular_avatar{
-    border-radius: 50%;
-    background-color: ;
-} */
 .icon{
     width: 18px;
     height: 18px;
@@ -78,7 +74,6 @@ p{
     height: 100dvh;
     width: 100%;
     background-color: #727272;
-    /* display: none; */
     visibility: hidden;
     opacity: 0;
     transition: 0.3s ease-in;
@@ -194,10 +189,11 @@ p{
     font-size: 12px;
     color: var(--text-secondary);
 }
-
-.analytics_content{
+main{
     overflow-x: scroll;
     scrollbar-width: none;
+}
+.analytics_content{
     display: grid;
     grid-auto-columns: minmax(200px, auto);
     grid-template-areas: 
@@ -225,6 +221,21 @@ p{
 }
 .b_pro{grid-area: b_pro;}
 
+.dev_pref, .b_pro{
+    display: flex;
+    flex-direction: column;
+}
+
+.dev_pref table{
+    margin-top: auto;
+}
+
+.dev_pref tr th:last-child, 
+.dev_pref tr th:nth-child(2)
+{
+    width: 30%;
+}
+
 .analytics_content div.card{
     height: 232px;
     background-color: white;
@@ -250,22 +261,6 @@ th{
 td p{
     margin: 0;
 }
-
-.dev_pref, .b_pro{
-    display: flex;
-    flex-direction: column;
-}
-
-.dev_pref table{
-    margin-top: auto;
-}
-
-.dev_pref tr th:last-child, 
-.dev_pref tr th:nth-child(2)
-{
-    width: 30%;
-}
-
 
 .custom_btn {
     background-color: var(--primary-color);
@@ -356,6 +351,88 @@ td p{
     margin-left: 10px;
 }
 
+
+/* Products Section */
+.add_product_content{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 65% auto;
+    margin-top: 10px;
+    gap: 15px;
+    /* grid-auto-columns: minmax(500px, auto); */
+}
+.add_product_content .card{
+    padding: 10px;
+}
+
+.upload_img, .general_info{
+    height: 395px;
+}
+
+.category, .stock{
+    margin-top: 15px;
+}
+
+.p_info, .p_prop{
+    display: flex;
+    flex-direction: column;
+    height: 350px;
+}
+.col{
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    height: auto;   
+}
+.stk, .cat{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 173px;
+}
+
+.p_prop{
+    justify-content: space-between;
+}
+
+.grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.kv{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 7px;
+}
+
+.kv input{
+    flex: 1 0 140px;
+}
+
+label{
+    display: block;
+    font-size: 14px;
+    margin-bottom: 7px;
+    font-weight: bold;
+    color: var(--text-secondary);
+}
+
+input, textarea, select{
+    border-radius: 5px;
+    border: none;
+    background-color: var(--surface-table-head-invert);
+    padding: 15px 10px;
+}
+select{
+    cursor: pointer;
+}
+
+#pDescription{
+    height: 100%;
+}
 
 @media screen and (max-width: 992px) {
     .home nav{
