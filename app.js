@@ -6,6 +6,7 @@ const userRoute = require('./routes/userRoutes');
 const categoryRoute = require('./routes/categoryRoutes');
 const addressRoute = require('./routes/addressRoute');
 const pagesRoute = require('./routes/pagesRoute');
+const pagesRoute = require('./routes/pagesRoute');
 const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 8000;
@@ -37,6 +38,9 @@ mongoose.connect(process.env.DB_URL).then(() => {
     app.listen(port, () => {
         console.log('listening at port ' + port)
     });
+}).catch(error => {
+    console.log(error.message)
+})
 }).catch(error => {
     console.log(error.message)
 })
