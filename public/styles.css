@@ -43,6 +43,30 @@ body.center {
     text-decoration: none;
 }
 
+/* Admin home page */
+.admin_body {
+    width: 100dvw;
+    display: flex;
+    height: 100dvh;
+}
+
+.side_nav {
+    height: 100%;
+    width: 300px;
+    background-color: rgb(197, 197, 197);
+}
+
+.content {
+    width: 100%;
+
+}
+
+.head_nav {
+    height: 50px;
+    width: 100%;
+    background-color: grey;
+}
+
 
 @media screen and (max-width: 992px) {}
 
