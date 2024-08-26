@@ -40,7 +40,3 @@ mongoose.connect(process.env.DB_URL).then(() => {
 }).catch(error => {
     console.log(error.message)
 })
-.catch(error => {
-    console.log(error.message)
-})
-
