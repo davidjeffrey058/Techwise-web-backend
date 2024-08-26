@@ -5,6 +5,7 @@ const productRoute = require('./routes/productRoutes');
 const userRoute = require('./routes/userRoutes');
 const categoryRoute = require('./routes/categoryRoutes');
 const addressRoute = require('./routes/addressRoute');
+const pagesRoute = require('./routes/pagesRoute');
 const app = express();
 const cors = require('cors');
 const port = process.env.PORT || 8000;
@@ -18,26 +19,11 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.get("/", (req, res) => {
-    res.redirect('/home');
+    res.redirect('/dashboard');
 });
 
-// Pages
-app.get('/home', (req, res) => {
-    res.redirect('/dashboard')
-});
 
-app.get('/dashboard', (req, res) => {
-    res.render('dashboard', { title: 'Dashboard' });
-})
-
-app.get('/products', (req, res) => {
-    res.render('products', {title: "Products"});
-})
-
-app.get('/analytics', (req, res) => {
-    res.render('analytics', {title: "Analytics"})
-})
-
+app.use('', pagesRoute);
 app.use('/api/users', userRoute);
 app.use('/api/categories', categoryRoute);
 app.use('/api/products', productRoute);
@@ -51,8 +37,7 @@ mongoose.connect(process.env.DB_URL).then(() => {
     app.listen(port, () => {
         console.log('listening at port ' + port)
     });
+}).catch(error => {
+    console.log(error.message)
 })
-    .catch(error => {
-        console.log(error.message)
-    })
 

@@ -351,6 +351,30 @@ td p{
     margin-left: 10px;
 }
 
+/* Admin home page */
+.admin_body {
+    width: 100dvw;
+    display: flex;
+    height: 100dvh;
+}
+
+.side_nav {
+    height: 100%;
+    width: 300px;
+    background-color: rgb(197, 197, 197);
+}
+
+.content {
+    width: 100%;
+
+}
+
+.head_nav {
+    height: 50px;
+    width: 100%;
+    background-color: grey;
+}
+
 
 /* Products Section */
 .add_product_content{
