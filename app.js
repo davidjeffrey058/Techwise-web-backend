@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.get("/", (req, res) => {
-    res.redirect('/dashboard');
+    res.redirect('/home');
 });
 
 
@@ -40,7 +40,5 @@ mongoose.connect(process.env.DB_URL).then(() => {
 }).catch(error => {
     console.log(error.message)
 })
-.catch(error => {
-    console.log(error.message)
-})
+
 

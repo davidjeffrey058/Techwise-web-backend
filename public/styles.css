@@ -63,6 +63,10 @@ p{
     width: 18px;
     height: 18px;
 }
+/* .icon.hover:hover{
+    padding: 3px;
+    border-radius: 50%;
+} */
 .home {
     height: 100dvh;
     position: relative;
@@ -391,6 +395,10 @@ td p{
 
 .upload_img, .general_info{
     height: 395px;
+}
+.upload_img{
+    display: flex;
+    flex-direction: column;
 }
 
 .category, .stock{

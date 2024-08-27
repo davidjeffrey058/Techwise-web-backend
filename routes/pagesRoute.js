@@ -2,6 +2,10 @@ const express = require('express');
 
 const pagesRouter = express.Router();
 
+pagesRouter.get('/home', (req, res) => {
+    res.redirect('/dashboard');
+})
+
 pagesRouter.get('/dashboard', (req, res) => {
     res.render('dashboard', { title: 'Dashboard' });
 });
