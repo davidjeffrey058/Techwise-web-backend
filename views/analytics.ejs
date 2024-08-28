@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('./components/head.ejs') %>
+
+    <body>
+       <div class="home flex">
+            <nav>
+                <a href="" class="link"><h1 class="web_title">TECHWISE</h1></a>
+                <hr color="#F8F8F8">
+                <%- include('./components/navDrawer.ejs', {index: 4}) %>
+            </nav>
+            <div class="content">
+                    <%- include('./components/headerBar.ejs') %>
+
+                    <div class="main">
+
+                        <div class="flex spc_btw">
+                            <h2 class="main_heading">Analytics</h2>
+
+                            <%- include('./components/dateSelect.ejs') %>
+                        </div>
+
+                        <main class="analytics_content">
+                            <!-- Total Amount Section -->
+                            <div class="card t_amt">
+                                <div class="flex spc_btw">
+                                    <p>Total Amount</p>
+                                    <div style="width: fit-content;" class="trending up">
+                                        <img src="/icons/trend.png" alt="">
+                                        <p>+2.7%</p>
+                                    </div>
+                                </div>
+                                <h2 class="amount_heading">$90,584B</h2>
+                            </div>
+
+                            <!-- Total Revenue Section -->
+                            <div class="card t_rev">
+                                <div class="flex spc_btw">
+                                    <p>Total Revenue</p>
+                                    <div style="width: fit-content;" class="trending up">
+                                        <img src="/icons/trend.png" alt="">
+                                        <p>+2.7%</p>
+                                    </div>
+                                </div>
+                                <h2 class="amount_heading">$40,583</h2>
+                            </div>
+
+                            <!-- Total Customer Section -->
+                            <div class="card t_cus">
+                                <div class="flex spc_btw">
+                                    <p>Total Customers</p>
+                                    <div style="width: fit-content;" class="trending down">
+                                        <img src="/icons/down-arrow.png" alt="">
+                                        <p>-1.5%</p>
+                                    </div>
+                                </div>
+                                <h2 class="amount_heading">20,584</h2>
+                            </div>
+
+                            <!-- Product Sell/Purchase return section -->
+                            <div class="card p_sell">
+                                <div class="flex spc_btw">
+                                    <h2 class="sub_heading">Product Sell/Purchase Return</h2>
+                                    <%- include('./components/dateSelect.ejs') %>
+                                </div>
+                                <div class="flex spc_btw">
+                                    <div class="flex align">
+                                        <h2 class="amount_heading">$90,584B</h2>
+                                        <div style="width: fit-content;" class="trending up">
+                                            <img src="/icons/trend.png" alt="">
+                                            <p>+2.7%</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex align">
+                                        <div style="margin-right: 15px;"class="flex align">
+                                            <div style="background-color: #ED9B2D;" class="big_dot"></div>
+                                            <p>Purchase Return</p>
+                                        </div>
+                                        <div class="flex align">
+                                            <div class="big_dot"></div>
+                                            <p>Product Sell</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Top Customer Section    -->
+                            <div class="card tp_cus">
+                                <div class="flex spc_btw">
+                                    <h2 class="sub_heading">Top Customer</h2>
+                                    <%- include('./components/dateSelect.ejs') %>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th>Customer ID</th>
+                                        <th>Customer Name</th>
+                                        <th>Actions</th>
+                                    </tr>
+
+                                <% const data = [1, 2, 3, 4] %>
+                                    <%data.forEach(element => {%>
+                                        <tr>
+                                            <td>#663D3829E</td>
+                                            <td>
+                                                <div class="flex align">
+                                                    <div class="round_dp" style="width: 23px; height: 23px;">
+                                                    </div>
+                                                    <p>Leslie Alexander</p>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <img src="" alt="visisbility" class="icon hover">
+                                            </td>
+                                        </tr>
+                                    <%})%>
+
+                                </table>
+                            </div>
+
+                            <div class="card dev_pref">
+                                <div class="flex spc_btw">
+                                    <h2 class="sub_heading">User Based by Device Preferences</h2>
+                                    <%- include('./components/dateSelect.ejs') %>
+                                </div>
+                                <table>
+                                    <tr>
+                                        <th>Device</th>
+                                        <th>Number of Users</th>
+                                        <th>Average</th>
+                                    </tr>
+                                <% const data2 = [{
+                                    device: 'Desktop',
+                                    users: '80.54K',
+                                    average: '1.2',
+                                    picture: 'desktop.png'
+                                },{
+                                    device: 'Mobile',
+                                    users: '1.5M',
+                                    average: '1.7',
+                                    picture: 'mobile.png'
+                                },{
+                                    device: 'Tablet',
+                                    users: '50.58K',
+                                    average: '0.7',
+                                    picture: 'tablet.png'
+                                }] %>
+                                    <%data2.forEach((element, index) => {%>
+                                        <tr>
+                                            <td>
+                                                <div class="flex align">
+                                                    <img src="/illustrations/<%=element.picture%>" alt="" width="24px" height="24px">
+                                                    <p style="margin-left: 10px;"><%=element.device%></p>    
+                                                </div>    
+                                            </td>
+                                            <td>
+                                                <div class="flex align">
+                                                    <p><%=element.users%></p>
+                                                </div>
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <div class="trending <%= index === 1? 'down':'up' %>">
+                                                    <img style="margin-right: 5px;" src="<%= index === 1? '/icons/down-arrow.png':'/icons/trend.png' %>" alt="">
+                                                    <p>+<%=element.average%>%</p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <%})%>
+
+                                </table>
+                            </div>
+
+                            
+                            <div class="card b_pro">
+                                <div class="flex spc_btw" style="padding-block: 10px;">
+                                    <h2 class="sub_heading">Buyer's Profile</h2>
+                                    <img src="/icons/dots.png" alt="menu" class="icon hover">
+                                </div>
+                                <div style="margin-block: auto;" class="flex align">
+                                    <div style="
+                                        height: 179px;
+                                        aspect-ratio: 1;
+                                        background-color: #D9D9D9;
+                                    "></div>
+
+                                    <div class="gender_cont">
+                                        <div class="flex spc_btw">
+                                            <div class="flex align">
+                                                <div class="big_dot"></div>
+                                                <p>Male</p>
+                                            </div>
+
+                                            <div class="trending up bp">
+                                                <p>60.5%</p>    
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="flex spc_btw">
+                                            <div class="flex align">
+                                                <div style="background-color: #88C26D;" class="big_dot"></div>
+                                                <p>Female</p>
+                                            </div>
+                                            
+                                            <div style="
+                                            border-color: #88C26D;
+                                            color: #88C26D;
+                                            background-color: #88c26d91;
+                                            " class="trending bp">
+                                                <p>30%</p>    
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <div class="flex spc_btw">
+                                            <div class="flex align">
+                                                <div style="background-color: #ED9B2D;" class="big_dot"></div>
+                                                <p>Others</p>
+                                            </div>
+                                            
+                                            <div style="
+                                            border-color: #ED9B2D;
+                                            color: #ED9B2D;
+                                            background-color: #ed9a2d84;
+                                            " class="trending bp">
+                                                <p>9.5%</p>    
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </main>
+
+                    </div>
+            </div>
+       </div>
+       <div class="mobile_drawer_background" onclick="toggleDrawer()"></div>
+       <div class="mobile_drawer">
+            <%-include('./components/navDrawer.ejs', {index: 4})%>
+        </div>
+    </body>
+
+</html>

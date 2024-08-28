@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% var selectedIndex = 0 %>
+<%- include('./components/head.ejs') %>
+
+    <body>
+        <div class="home flex">
+            <nav>
+                <a href="" class="link"><h1 id="main_title" class="web_title">TECHWISE</h1></a>
+                <hr color="#F8F8F8">
+                <%- include('./components/navDrawer.ejs', {index:0}) %>
+            </nav>
+            <div class="content">
+                    <%- include('./components/headerBar.ejs') %>
+                    <div class="main">
+                        <h2 class="main_heading">Dashboard</h2>
+                    </div>
+            </div>
+        </div>
+        <div class="mobile_drawer_background" onclick="toggleDrawer()"></div>
+        <div class="mobile_drawer">
+             <%-include('./components/navDrawer.ejs', {index: 0})%>
+         </div>
+       
+    </body>
+</html>

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+    <% var selectedIndex = 0 %>
+<%- include('./components/head.ejs') %>
+<style>
+    .image_preview{
+        display: none;
+       grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 10px;
+        /* margin-bottom: auto; */
+        height: 100%;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        margin-top: 10px;
+        grid-auto-rows: min-content;
+    }
+    .image_preview img{
+        background-color: #d3d3d3d3;
+        border-radius: 5px;
+    }
+    .img_container{
+        position: relative;
+        height: fit-content;
+        overflow: hidden;
+        cursor: pointer;
+    }
+    .img_container:hover .img_delete{
+      top: 5px;
+    }
+    .sub_prev{
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+    }
+    .row_cont{
+        position: relative;
+        background-color: aqua;
+    }
+    .img_delete, .delete_prop{
+        overflow: hidden;
+        cursor: pointer;
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        background-color: rgba(0, 0, 0, 0.507);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: 0.2s ease-in;
+    }
+    .img_delete{
+        top: -25px;
+        right: 5px;
+    }
+    .delete_prop{
+        top: 10px;
+    }
+    .img_delete .icon{
+        background-color: transparent;
+    }
+    label.file_select{
+        padding: 12px 16px;
+        font-size: 13px;
+        font-weight: normal;
+        border: 1px solid grey;
+        color: grey;
+        text-align: center;
+        border-radius: 5px;
+    }
+    #input_file{
+        display: none;
+    }
+</style>
+
+    <body>
+       <div class="home flex">
+            <nav>
+                <a href="" class="link"><h1 class="web_title">TECHWISE</h1></a>
+                <hr color="#F8F8F8">
+                <%- include('./components/navDrawer.ejs', {index: 1}) %>
+            </nav>
+            <div class="content">
+                <%- include('./components/headerBar.ejs') %>
+                <div class="main">
+                    <div class="flex spc_btw">
+                        <h2 class="main_heading">Add New Product</h2>
+                        <button class="custom_btn">Add Product</button>
+                    </div>
+                   
+
+                    <main class="add_product_content">
+                        <div class="sec_1">
+
+                            <div class="general_info card">
+                                <h2 class="sub_heading">General Information</h2>
+                                <br>
+                                <div class="grid">
+
+                                    <div class="p_info">
+                                        <label for="pName">Product Name</label>
+                                        <input type="text" name="" id="pName" placeholder="Enter product name here">
+                                        <br><br>
+                                        <label for="pDescription">Product Description</label>
+                                         <textarea name="" id="pDescription" placeholder="Enter product description here"></textarea>
+                                    </div>
+
+                                    <div class="p_prop">
+                                        <div>
+                                            <table class="key_prop_table">
+                                                <tr>
+                                                    <th colspan="2">Product Properties</th>
+                                                </tr>                                                
+                                        
+                                            </table>
+                                        </div>
+                                        
+                                        <form onsubmit="addNewProperty(event)" style="text-align: center;">
+                                            <div class="kv">
+                                                <input id="key_property" type="text" placeholder="Key property" required>
+                                                <input id="key_value" type="text" placeholder="value" required>
+                                            </div>
+                                            
+                                            <input  style="margin-top: 7px;" type="submit" class="custom_btn" value="Add Property">
+                                        </form>
+                                        
+                                        <script>
+                                            let keyProperties = [{
+                                                property: "Chipset Brand",
+                                                value: "AMD"
+                                            }, {
+                                                property: "Wireless Type",
+                                                value: "802.11a/b/g/n/ac, Bluetooth"
+                                            }, {
+                                                property: "Processor",
+                                                value: "3.9 GHz ryzen 5"
+                                            }, {
+                                                property: "Standing screen display size",
+                                                value: "0.1"
+                                            }, {
+                                                property: "Number of Processors",
+                                                value: "6"
+                                            }];
+
+                                            const keyPropertyTable = document.querySelector('.key_prop_table');
+                                           
+                                            keyProperties.forEach((value, index) => {
+                                                createNewTableRow(value.value, value.property)
+                                            });
+
+                                            function addNewProperty(event){
+                                                event.preventDefault();
+                                                const keyProperty = document.getElementById('key_property');
+                                                const keyValue = document.getElementById('key_value');
+
+                                                createNewTableRow(keyValue.value, keyProperty.value);
+                                                keyProperties.push({property: keyProperty.value, value: keyValue.value})
+
+                                                keyProperty.value = '';
+                                                keyValue.value = '';
+                                            }
+
+                                            function createNewTableRow(value, property){
+                                                const tableRow = document.createElement('tr');
+
+                                                const col1 = document.createElement('td');
+                                                col1.innerHTML = property;
+
+                                                const col2 = document.createElement('td');
+                                                col2.innerHTML = value;
+
+                                                tableRow.append(col1, col2);
+                                                keyPropertyTable.appendChild(tableRow);
+                                            }
+                                            
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="stock card">
+                                <h2 class="sub_heading">Pricing and Stock</h2><br>
+                               <div class="stk">
+                                    <div class="grid">
+                                        <div class="col">
+                                            <label for="pricing">Base Pricing</label>
+                                            <input type="number" id="pricing" placeholder="372.34" required>
+                                        </div>
+                            
+                                        <div class="col">
+                                            <label for="stock">Stock</label>
+                                            <input type="number" id="stock" placeholder="100" required>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="grid">
+                                        <div class="col">
+                                            <label for="discount">Discount</label>
+                                            <input type="number" id="discount" placeholder="25" min="1" max="100">
+                                        </div>
+                                    
+                                        <div class="col">
+                                            <label for="discount_type">Discount type</label>
+                                            <select name="" id="discount_type">
+                                                <option>---</option>
+                                                <option value="Christmas">Christmas Discount</option>
+                                                <option value="Christmas">Easter Discount</option>
+                                                <option value="Christmas">New Year Discount</option>
+                                            </select>
+                                        </div>
+                                    
+                                    </div>
+                               </div>                                
+                            </div>
+
+                        </div>
+                        <div class="sec_2">
+                            <div class="upload_img card">
+                                <h2 class="sub_heading">Upload Images</h2>
+
+                                <div class="image_preview">  
+                                </div>
+
+                                <div class="no_image" style="display: flex;
+                                align-items: center;
+                                justify-content: center;
+                                height: 100%;
+                                ">
+                                    <div style="text-align: center;">
+                                        <img style="margin-bottom: 20px;" 
+                                        src="/illustrations/gallery.png" alt="Add image" width="150px" height="150px">
+                                        <p style="color: #BEBDBD; font-weight: bold;">No image Added yet</p>
+                                    </div>
+                                    
+                                </div>
+
+                                <label class="file_select hover" for="input_file">Add Image</label>
+                                <input type="file" id="input_file" accept="image/jpeg, image/jpg, image/png" multiple>
+                            </div>
+
+                            <script>
+                                const imagePreview = document.querySelector('.image_preview');
+                                const inputFile = document.getElementById('input_file');
+                                const noImageText = document.querySelector('.no_image');
+
+                                inputFile.onchange = function(){
+                                    const files = inputFile.files;
+
+                                    if(imagePreview.children.length === 0){
+                                        noImageText.style.display = 'none';
+                                        imagePreview.style.display = 'grid';
+                                    }
+                                    
+                                    for(const file of files){
+                                        var template;
+                                        const url = URL.createObjectURL(file);
+                                    
+                                        const imageContainer = document.createElement('div');
+                                        imageContainer.classList.add('img_container')
+
+                                        const img = document.createElement('img');
+                                        img.src= url;
+                                        img.classList.add('sub_prev');
+
+                                        const imgDelete = document.createElement('div');
+                                        imgDelete.classList.add('img_delete');
+                                        imgDelete.title = 'Delete Image';
+                                        imgDelete.onclick = deleteImage;
+
+                                        const deleteIcon = document.createElement('img');
+                                        deleteIcon.classList.add('icon');
+                                        deleteIcon.src = '/icons/delete.png';
+
+                                        imgDelete.appendChild(deleteIcon);
+                                        imageContainer.appendChild(img);
+                                        imageContainer.appendChild(imgDelete);
+                                        
+                                        imagePreview.appendChild(imageContainer);// images.push(url);
+                                    } 
+                                    
+                                }
+
+                                function deleteImage(event) {
+                                    const deleteBtn = event.target;
+                                    const imgContainer = deleteBtn.closest('.img_container');
+                                    const imgElement = imgContainer.querySelector('img.sub_prev');
+                                    const imgUrl = imgElement.src;
+
+                                    // images = images.filter(url => url !== imgUrl);
+
+                                    imgContainer.remove();
+
+                                    if(imagePreview.children.length === 0){
+                                        noImageText.style.display = 'flex';
+                                        imagePreview.style.display = 'none';
+                                    }
+                                    // Revoke the object URL
+                                    URL.revokeObjectURL(imgUrl);
+                                }
+                            </script>
+
+                            <div class="category card">
+                                <h2 class="sub_heading">Category</h2>
+                               <div class="cat">
+                                    <div class="col">
+                                        <label for="category">Category</label>
+                                        <select name="" id="category">
+                                            <% const categories = ['---',
+                                                'Laptops', 'Desktops',
+                                                'Pc Gaming', 'Monitors', 
+                                                'Computer Components', 'Tablets & Phones',
+                                                'Computer Accessories', 'Storage & Hardrives',
+                                                'Networking'
+                                            ]; %>
+                                        
+                                            <% categories.forEach(function(value) { %>
+                                                <option value="<%=(value === '---'? '': value)%>"><%=value%></option>
+                                            <% }); %>
+                                        </select>                                        
+                                    </div>
+                                    <button style="width: 125px;" class="custom_btn">Add Category</button>
+                               </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+       </div>
+       <div class="mobile_drawer_background" onclick="toggleDrawer()"></div>
+       <div class="mobile_drawer">
+            <%-include('./components/navDrawer.ejs', {index: 1})%>
+        </div>
+    </body>
+
+</html>
