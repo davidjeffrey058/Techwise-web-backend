@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.get("/", (req, res) => {
-    res.redirect('/dashboard');
+    res.redirect('/home');
 });
 
 

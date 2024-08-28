@@ -39,8 +39,10 @@ p{
 }
 
 .center {
+    display: flex;
     justify-content: center;
     align-items: center;
+    height: 100dvh;
 }
 .card{
     background-color: var(--card-color);
@@ -274,7 +276,7 @@ td p{
 }
 
 .custom_btn:hover {
-    background-color: rgb(33, 122, 255);
+    background-color: #0094d3;
 }
 
 .not_found_cont h1 {
@@ -285,6 +287,7 @@ td p{
 
 .not_found_cont p {
     width: 500px;
+    align-self: center;
 }
 
 .link {
@@ -392,6 +395,10 @@ td p{
 .upload_img, .general_info{
     height: 395px;
 }
+.upload_img{
+    display: flex;
+    flex-direction: column;
+}
 
 .category, .stock{
     margin-top: 15px;
@@ -402,6 +409,14 @@ td p{
     flex-direction: column;
     height: 350px;
 }
+/* .p_prop{
+    justify-content: space-between;
+} */
+ .p_prop > div{
+    height: 100%;
+    overflow-y: scroll;
+    scrollbar-width: none;
+ }
 .col{
     display: flex;
     flex-direction: column;
@@ -415,9 +430,6 @@ td p{
     height: 173px;
 }
 
-.p_prop{
-    justify-content: space-between;
-}
 
 .grid{
     display: grid;
@@ -438,7 +450,7 @@ td p{
 
 label{
     display: block;
-    font-size: 14px;
+    font-size: 13px;
     margin-bottom: 7px;
     font-weight: bold;
     color: var(--text-secondary);
@@ -485,6 +497,13 @@ select{
     .not_found_cont h1 {
         font-size: 150px;
     }
+    .add_product_content{
+        display: block;
+    }
+    .sec_2{
+        margin-top: 15px;
+    }
+    
 }
 
 @media screen and (max-width: 600px) {
@@ -501,5 +520,16 @@ select{
     }
     .content{
         padding: 0;
+    }
+
+    .general_info .grid{
+        display: block;
+    }
+    .general_info{
+        height: fit-content;
+    }
+    .hd{
+        position: sticky;
+        top: 0;
     }
 }
