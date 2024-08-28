@@ -1,4 +1,4 @@
-:root{
+:root {
     --primary-color: #0074A6;
     --custom-red: #DD0202;
     --custom-light-red: #dd02028a;
@@ -13,6 +13,16 @@
     --surface-secondary: #FDFDFD;
     --surface-primary: #F8F8F8;
     --card-color: #ffffffff;
+
+    --white: #ffffffff;
+}
+
+.material-symbols-outlined {
+    font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
 }
 
 body {
@@ -22,18 +32,21 @@ body {
     background-color: var(--surface-primary);
     color: var(--text-primary);
 }
-p{
+
+p {
     font-size: 13px;
     margin: 0;
 }
 
-.flex{
+.flex {
     display: flex;
 }
-.align{
+
+.align {
     align-items: center;
 }
-.spc_btw{
+
+.spc_btw {
     justify-content: space-between;
     align-items: center;
 }
@@ -44,33 +57,57 @@ p{
     align-items: center;
     height: 100dvh;
 }
-.card{
+
+.card {
     background-color: var(--card-color);
     border-radius: 10px;
     box-shadow: 0 2px 6px hsla(0, 0%, 0%, 0.077);
 }
-.hover{
-   transition: background 0.2s ease-in;
+
+.hover {
+    transition: background 0.2s ease-in;
 }
-.hover:hover{
+
+.hover:hover {
     cursor: pointer;
     background-color: var(--surface-primary);
 }
-.link{
+
+.link {
     text-decoration: none;
     color: var(--text-primary);
 }
 
-.icon{
+.icon {
     width: 18px;
     height: 18px;
+    color: var(--text-primary);
 }
+
+.icon.hover {
+    cursor: pointer;
+    user-select: none;
+}
+
+
+.icon:hover:after {
+    content: '';
+    width: 30px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: var(--surface-primary);
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    z-index: -1;
+}
+
 .home {
     height: 100dvh;
     position: relative;
 }
 
-.mobile_drawer_background{
+.mobile_drawer_background {
     top: 0;
     position: absolute;
     height: 100dvh;
@@ -81,7 +118,7 @@ p{
     transition: 0.3s ease-in;
 }
 
-.mobile_drawer{
+.mobile_drawer {
     display: none;
     position: absolute;
     background-color: white;
@@ -94,7 +131,7 @@ p{
 }
 
 
-.home nav{
+.home nav {
     background-color: var(--card-color);
     width: 225px;
     overflow-y: scroll;
@@ -102,45 +139,49 @@ p{
     height: 100dvh;
 }
 
-.web_title{
+.web_title {
     margin: 22.5px;
     font-size: 20px;
     font-weight: bold;
     color: var(--primary-color);
 }
-.nav_content{
+
+.nav_content {
     height: 88%;
     display: flex;
     flex-direction: column;
 }
 
-.nav_content .flex{
+.nav_content .flex {
     align-items: center;
     padding: 11.25px 15px;
     margin-inline: 7.5px;
     border-radius: 5px;
 }
-.nav_content .flex p{
+
+.nav_content .flex p {
     margin: 0 0 0 11.25px;
     font-size: 12px;
 }
 
-.sec_txt{
+.sec_txt {
     margin: 15px 0 12px 7.5px;
     font-size: 12px;
     color: var(--text-invert);
 }
 
-.content{
+.content {
     width: 100%;
     padding: 15px;
     overflow-y: scroll;
     scrollbar-width: none;
 }
-.hd{
+
+.hd {
     padding: 15px;
 }
-.round_dp{
+
+.round_dp {
     width: 45px;
     height: 45px;
     background-color: grey;
@@ -151,20 +192,24 @@ p{
     object-fit: cover;
     background-position: center;
 }
-.prim{
+
+.prim {
     font-size: 12px;
     color: var(--text-invert);
 }
-.sec{
+
+.sec {
     font-size: 13px;
     color: var(--text-primary);
     font-weight: bold;
 }
-.prim, .sec{
+
+.prim,
+.sec {
     margin: 0;
 }
 
-.main{
+.main {
     margin-top: 15px;
     background-color: var(--surface-secondary);
     min-height: 90dvh;
@@ -172,95 +217,119 @@ p{
     padding: 15px;
 }
 
-.main_heading{
+.main_heading {
     font-size: 20px;
     margin: 0;
 }
 
-.sub_heading{
+.sub_heading {
     font-size: 16px;
     margin: 0;
 }
-.date_select{
+
+.date_select {
     border: 1px solid var(--border-invert);
     border-radius: 5px;
     padding: 9px;
 }
-.date_select p{
+
+.date_select p {
     margin: 0 5px;
     font-size: 12px;
     color: var(--text-secondary);
 }
-main{
+
+main {
     overflow-x: scroll;
     scrollbar-width: none;
 }
-.analytics_content{
+
+.analytics_content {
     display: grid;
     grid-auto-columns: minmax(200px, auto);
-    grid-template-areas: 
-    "top_amount  top_amount  top_revenue  top_revenue  top_customer  top_customer"
-    "p_sell  p_sell  p_sell  p_sell  tp_cus  tp_cus"
-    "dev_pref  dev_pref  dev_pref  b_pro  b_pro  b_pro";
+    grid-template-areas:
+        "top_amount  top_amount  top_revenue  top_revenue  top_customer  top_customer"
+        "p_sell  p_sell  p_sell  p_sell  tp_cus  tp_cus"
+        "dev_pref  dev_pref  dev_pref  b_pro  b_pro  b_pro";
     gap: 15px;
     margin-top: 10px;
 }
 
-.t_amt{
+.t_amt {
     grid-area: top_amount;
 }
-.t_rev{grid-area: top_revenue;}
-.t_cus{grid-area: top_customer;}
-.p_sell{grid-area: p_sell;}
-.tp_cus{
+
+.t_rev {
+    grid-area: top_revenue;
+}
+
+.t_cus {
+    grid-area: top_customer;
+}
+
+.p_sell {
+    grid-area: p_sell;
+}
+
+.tp_cus {
     grid-area: tp_cus;
     overflow-y: scroll;
     scrollbar-width: none;
 }
-.dev_pref{
+
+.dev_pref {
     grid-area: dev_pref;
     height: 100%;
 }
-.b_pro{grid-area: b_pro;}
 
-.dev_pref, .b_pro{
+.b_pro {
+    grid-area: b_pro;
+}
+
+.dev_pref,
+.b_pro {
     display: flex;
     flex-direction: column;
 }
 
-.dev_pref table{
+.dev_pref table {
     margin-top: auto;
 }
 
-.dev_pref tr th:last-child, 
-.dev_pref tr th:nth-child(2)
-{
+.dev_pref tr th:last-child,
+.dev_pref tr th:nth-child(2) {
     width: 30%;
 }
 
-.analytics_content div.card{
+.analytics_content div.card {
     height: 232px;
     background-color: white;
     padding: 7.5px;
 }
-table, th, td{
+
+table,
+th,
+td {
     border: 1px solid var(--border-invert);
 }
-table{
-    width: 100%; 
+
+table {
+    width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
 
-th,td{
+th,
+td {
     padding: 7.5px;
     font-size: 12px;
 }
-th{
+
+th {
     background-color: var(--surface-table-head-invert);
 }
 
-td p{
+td p {
     margin: 0;
 }
 
@@ -293,7 +362,8 @@ td p{
 .link {
     text-decoration: none;
 }
-.trending{
+
+.trending {
     border-radius: 25px;
     border: 1px solid;
     display: inline-flex;
@@ -302,33 +372,36 @@ td p{
     padding: 6px;
     width: 105px;
 }
-.trending p{
+
+.trending p {
     font-size: 12px;
     margin: 0;
     font-weight: bold;
 }
-.trending img{
+
+.trending img {
     width: 12px;
     height: 12px;
 }
 
-.up{
+.up {
     border-color: var(--custom-green);
     background-color: var(--custom-light-green);
     color: var(--custom-green);
 }
 
-.down{
+.down {
     border-color: var(--custom-red);
     background-color: var(--custom-light-red);
     color: var(--custom-red);
 }
 
-.gender_cont{
+.gender_cont {
     margin-left: 40px;
     width: 100%;
 }
-.big_dot{
+
+.big_dot {
     width: 11px;
     aspect-ratio: 1;
     border-radius: 50%;
@@ -336,21 +409,23 @@ td p{
     margin-right: 10px;
 }
 
-.big_dot + p{
+.big_dot+p {
     margin: 0;
 }
-.bp{
+
+.bp {
     width: 67px;
 }
-.amount_heading{
+
+.amount_heading {
     margin: 0 10px 0 0;
 }
 
-.nav_draw_btn{
+.nav_draw_btn {
     display: none;
 }
 
-.admin_name + img{
+.admin_name+img {
     margin-left: 10px;
 }
 
@@ -380,7 +455,7 @@ td p{
 
 
 /* Products Section */
-.add_product_content{
+.add_product_content {
     width: 100%;
     display: grid;
     grid-template-columns: 65% auto;
@@ -388,42 +463,51 @@ td p{
     gap: 15px;
     /* grid-auto-columns: minmax(500px, auto); */
 }
-.add_product_content .card{
+
+.add_product_content .card {
     padding: 10px;
 }
 
-.upload_img, .general_info{
+.upload_img,
+.general_info {
     height: 395px;
 }
-.upload_img{
+
+.upload_img {
     display: flex;
     flex-direction: column;
 }
 
-.category, .stock{
+.category,
+.stock {
     margin-top: 15px;
 }
 
-.p_info, .p_prop{
+.p_info,
+.p_prop {
     display: flex;
     flex-direction: column;
     height: 350px;
 }
+
 /* .p_prop{
     justify-content: space-between;
 } */
- .p_prop > div{
+.p_prop>div {
     height: 100%;
     overflow-y: scroll;
     scrollbar-width: none;
- }
-.col{
+}
+
+.col {
     display: flex;
     flex-direction: column;
     justify-content: stretch;
-    height: auto;   
+    height: auto;
 }
-.stk, .cat{
+
+.stk,
+.cat {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -431,24 +515,24 @@ td p{
 }
 
 
-.grid{
+.grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
-.kv{
+.kv {
     display: flex;
     flex-wrap: wrap;
     gap: 7px;
     margin-top: 7px;
 }
 
-.kv input{
+.kv input {
     flex: 1 0 140px;
 }
 
-label{
+label {
     display: block;
     font-size: 13px;
     margin-bottom: 7px;
@@ -456,38 +540,42 @@ label{
     color: var(--text-secondary);
 }
 
-input, textarea, select{
+input,
+textarea,
+select {
     border-radius: 5px;
     border: none;
     background-color: var(--surface-table-head-invert);
     padding: 15px 10px;
 }
-select{
+
+select {
     cursor: pointer;
 }
 
-#pDescription{
+#pDescription {
     height: 100%;
 }
 
 @media screen and (max-width: 992px) {
-    .home nav{
+    .home nav {
         display: none;
     }
-    .nav_draw_btn{
+
+    .nav_draw_btn {
         display: block;
     }
-    .mobile_drawer{
+
+    .mobile_drawer {
         display: block;
     }
-    /* ..mobile_drawer_background{
-        visibility: ;
-    } */
-    .mobile_drawer.active{
+
+    .mobile_drawer.active {
         left: 0;
     }
-    .mobile_drawer_background.active{
-       visibility: visible;
+
+    .mobile_drawer_background.active {
+        visibility: visible;
         opacity: 0.5;
         cursor: pointer;
     }
@@ -497,13 +585,15 @@ select{
     .not_found_cont h1 {
         font-size: 150px;
     }
-    .add_product_content{
+
+    .add_product_content {
         display: block;
     }
-    .sec_2{
+
+    .sec_2 {
         margin-top: 15px;
     }
-    
+
 }
 
 @media screen and (max-width: 600px) {
@@ -514,21 +604,28 @@ select{
     .not_found_cont p {
         width: 100%;
     }
-    .admin_name{display: none;}
-    .admin_name + img{
+
+    .admin_name {
+        display: none;
+    }
+
+    .admin_name+img {
         margin-left: 0;
     }
-    .content{
+
+    .content {
         padding: 0;
     }
 
-    .general_info .grid{
+    .general_info .grid {
         display: block;
     }
-    .general_info{
+
+    .general_info {
         height: fit-content;
     }
-    .hd{
+
+    .hd {
         position: sticky;
         top: 0;
     }
