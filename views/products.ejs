@@ -7,7 +7,6 @@
                 display: none;
                 grid-template-columns: 1fr 1fr 1fr 1fr;
                 gap: 10px;
-                /* margin-bottom: auto; */
                 height: 100%;
                 overflow-y: scroll;
                 scrollbar-width: none;
@@ -432,7 +431,6 @@
                     const files = categoryImageSelector.files;
                     if (files) {
                         const url = URL.createObjectURL(files[0]);
-
                         categoryImageDisplay.src = url;
                     }
                 }

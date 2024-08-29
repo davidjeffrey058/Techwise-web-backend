@@ -1,6 +1,10 @@
 <div class="nav_content">
     <a href="/dashboard" style="background-color: <%=index===0 ? '#0074A6' : 'transparent'%>;" class="flex hover link">
-        <img src="/icons/dashboards<%=index===0? '': '-outline'%>.png" alt="Dashboard" width="18px" height="18px">
+
+        <span style="color: <%=index===0 ? 'white' : ''%>;"
+            class="material-symbols-outlined <%=index===0? 'filled': ''%>">
+            dashboard
+        </span>
         <p style="
         color: <%=index===0 ? 'white' : ''%>;
         font-weight: <%=index===0 ? 'bold' : ''%>;
@@ -9,37 +13,54 @@
 
     <p class="sec_txt">Menu</p>
     <a href="/products" style="background-color: <%=index===1 ? '#0074A6' : 'transparent'%>;" class="flex hover link">
-        <img src="/icons/package<%=index===1? '': '-outline'%>.png" alt="Products" width="18px" height="18px">
+        <span style="color: <%=index===1 ? 'white' : ''%>;"
+            class="material-symbols-outlined <%=index===1? 'filled': ''%>">
+            package_2
+        </span>
         <p style="
         color: <%=index===1 ? 'white' : ''%>;
         font-weight: <%=index===1 ? 'bold' : ''%>;
         ">Products</p>
     </a>
+
     <a href="" style="background-color: <%=index===2 ? '#0074A6' : 'transparent'%>;" class="flex hover link">
-        <img src="/icons/shopping-bag<%=index===2? '': '-outline'%>.png" alt="orders" width="18px" height="18px">
+        <span style="color: <%=index===2 ? 'white' : ''%>;"
+            class="material-symbols-outlined <%=index===2? 'filled': ''%>">
+            shopping_bag
+        </span>
         <p style="
         color: <%=index===2 ? 'white' : ''%>;
         font-weight: <%=index===2 ? 'bold' : ''%>;
         ">Orders</p>
     </a>
+
     <a href="" style="background-color: <%=index===3 ? '#0074A6' : 'transparent'%>;" class="flex hover link">
-        <img src="/icons/group<%=index===3? '': '-outline'%>.png" alt="Users" width="18px" height="18px">
+        <span style="color: <%=index===3 ? 'white' : ''%>;"
+            class="material-symbols-outlined <%=index===3? 'filled': ''%>">
+            groups
+        </span>
         <p style="
         color: <%=index===3 ? 'white' : ''%>;
         font-weight: <%=index===3 ? 'bold' : ''%>;
         ">Users</p>
     </a>
+
     <a href="/analytics" style="background-color: <%=index===4 ? '#0074A6' : 'transparent'%>;" class="flex hover link">
-        <img src="/icons/bar-chart<%=index===4? '': '-outline'%>.png" alt="Analytics" width="18px" height="18px">
+        <span style="color: <%=index===4 ? 'white' : ''%>;"
+            class="material-symbols-outlined <%=index===4? 'filled': ''%>">
+            monitoring
+        </span>
         <p style="
         color: <%=index===4 ? 'white' : ''%>;
         font-weight: <%=index===4 ? 'bold' : ''%>;
         ">Analytics</p>
     </a>
 
-    <div  style="margin-top: auto;
+    <div style="margin-top: auto;
     " class="flex hover link">
-        <img src="/icons/logout.png" alt="Logout" width="18px" height="18px">
+        <span class="material-symbols-outlined">
+            logout
+        </span>
         <p>Logout</p>
     </div>
 </div>
