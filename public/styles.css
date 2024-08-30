@@ -1,5 +1,6 @@
 :root {
     --primary-color: #0074A6;
+    --primary-highlight: #E9F8FF;
     --custom-red: #DD0202;
     --custom-light-red: #dd02028a;
     --custom-orange: #ED9B2D;
@@ -9,11 +10,11 @@
     --text-secondary: #727272;
     --text-invert: #BEBDBD;
     --border-invert: #BEBDBD;
+    
     --surface-table-head-invert: #F3F3F3;
     --surface-secondary: #FDFDFD;
     --surface-primary: #F8F8F8;
     --card-color: #ffffffff;
-
     --white: #ffffffff;
 }
 
@@ -92,13 +93,13 @@ p {
     color: var(--text-primary);
 }
 
-.icon.hover {
+.icon.hov {
     cursor: pointer;
     user-select: none;
 }
 
 
-.icon:hover:after {
+.icon.hov:hover:after {
     content: '';
     width: 30px;
     aspect-ratio: 1;
@@ -233,6 +234,8 @@ p {
 .sub_heading {
     font-size: 16px;
     margin: 0;
+    text-overflow: ellipsis;
+    max-lines: 1;
 }
 
 .date_select {
@@ -247,10 +250,6 @@ p {
     color: var(--text-secondary);
 }
 
-main {
-    overflow-x: scroll;
-    scrollbar-width: none;
-}
 
 .analytics_content {
     display: grid;
@@ -261,6 +260,8 @@ main {
         "dev_pref  dev_pref  dev_pref  b_pro  b_pro  b_pro";
     gap: 15px;
     margin-top: 10px;
+    overflow-x: scroll;
+    scrollbar-width: none;
 }
 
 .t_amt {
@@ -350,6 +351,20 @@ td p {
     border: none;
     cursor: pointer;
     transition: all 200ms linear;
+}
+
+.outline_btn{
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    background-color: transparent;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.outline_btn:hover{
+    background-color: var(--surface-primary);
 }
 
 .custom_btn:hover {
@@ -564,6 +579,36 @@ select {
 #pDescription {
     height: 100%;
 }
+
+.product_list_content{
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 15px;
+    margin-top: 15px;
+}
+.product_list_content .card{
+    /* height: 100%; */
+    padding: 15px;
+}
+
+.outline_icon_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid var(--border-invert);
+    color: var(--text-secondary);
+    background-color: var(--surface-table-head-invert);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.outline_icon_btn.disabled{
+    color: var(--border-invert);
+    cursor: not-allowed;
+}
+
 
 @media screen and (max-width: 992px) {
     .home nav {

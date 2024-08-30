@@ -1,0 +1,203 @@
+
+<div class="product_list main">
+    <div class="flex spc_btw">
+        <h2 class="main_heading">Products</h2>
+        <button onclick="showAddProductSection(true)" class="custom_btn">Add Product</button>
+    </div>
+    
+    <main class="product_list_content">
+        <div class="card">
+            <div style="margin-bottom: 15px;" class="flex spc_btw">
+                <h2 class="sub_heading">Product List ( 12 )</h2>
+
+                <div style="gap: 10px;" class="flex align">
+                    <input type="search" name="" id="" placeholder="Search product here">
+                    <div class="outline_icon_btn">
+                        <span class="material-symbols-outlined">
+                            filter_list
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product_table_container">
+                <table class="pro_tbl">
+                    <tr>
+                        <th style="width: 200px;">ID</th>
+                        <th>Product name</th>
+                        <th>Category</th>
+                        <th>Stock</th>
+                        <th>Price</th>
+                        <th>Discount</th>
+                        <th>Status</th>
+                    </tr>
+                </table>
+                <div style="padding: 10px; border-top: 1px solid #BEBDBD;" class="flex spc_btw">
+                    <p>Results (12)</p>
+                    <div style="gap: 10px;" class="flex align">
+                        <div class="outline_icon_btn disabled">Previous</div>
+                        <div class="outline_icon_btn">01</div>
+                        <div class="outline_icon_btn">Next</div>
+                    </div>
+                </div>
+            </div>
+
+           
+        </div>
+
+        <div style="
+        overflow: hidden; 
+        height: 96%;
+        display: flex;
+        flex-direction: column;
+        " class="card">
+            <div class="update_fields">
+                <h2 title="66afdce6b54ecda4fcded83d" class="sub_heading">#66afdce6b54ecda4fcded83d</h2><br>
+                <img style="object-fit: cover;" src="/temp/dell_gaming_laptop.jpg" alt="" width="100%" height="183px">
+
+                <div>
+                    <label for="updateName">Product Name</label>
+                    <input id="updateName" type="text" value="HP Pavillion Desktop"> 
+                </div>
+
+                <div>
+                    <label for="updateCategory">Category</label>
+                        <select name="" id="updateCategory">
+                            <% const categories=['---', 'Laptops' , 'Desktops' , 'Pc Gaming'
+                                , 'Monitors' , 'Computer Components' , 'Tablets & Phones'
+                                , 'Computer Accessories' , 'Storage & Hardrives' , 'Networking'
+                                ]; %>
+
+                                <% categories.forEach(function(value) { %>
+                                    <option value="<%=(value === '---'? '': value)%>">
+                                        <%=value%>
+                                    </option>
+                                    <% }); %>
+                        </select>
+                </div>
+
+                <div>
+                    <label for="updateStock">Stock</label>
+                    <input id="updateStock" type="number" value="20"> 
+                </div>
+
+                <div>
+                    <label for="updatePrice">Price</label>
+                    <input id="updatePrice" type="number" value="499"> 
+                </div>
+
+                <div>
+                    <label for="updateDiscount">Discount</label>
+                    <input id="updateDiscount" type="number" value="5"> 
+                </div>
+
+                <div>
+                    <label for="updateDiscounType">Discount type</label>
+                    <select name="" id="updateDiscounType">
+                        <option>---</option>
+                        <option value="Christmas">Christmas Discount</option>
+                        <option value="easter">Easter Discount</option>
+                        <option value="new_year">New Year Discount</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="updateDescription">Product Description</label>
+                        <textarea name="" id="updateDescription"
+                            placeholder="Enter product description here"></textarea>
+                </div>
+                
+            </div>
+            <div style="gap: 10px; justify-content: center; margin-top: auto;" class="flex">
+                <button style="width: 100%;" class="outline_btn">Delete</button>
+                <button style="width: 100%;" class="custom_btn">Update</button>
+            </div>
+        </div>
+    </main>
+    <style>
+        :root{
+            --text-secondary: #727272;
+            --primary-highlight: #E9F8FF;
+            --surface-table-head-invert: #F3F3F3;
+            --border-invert: #BEBDBD;
+            --custom-green: #01AA58;
+            --text-secondary: #727272;
+            --text-invert: #BEBDBD;
+            --surface-table-head-invert: #F3F3F3;
+        }
+        .product_table_container{
+            border-radius: 10px;
+            border: 1px solid var(--border-invert);
+        }
+        .pro_tbl, .pro_tbl th, .pro_tbl td{
+            background-color: transparent;
+            border: none;
+            text-align: center;
+        }
+        .pro_tbl tr{
+            height: 50px;
+            color: var(--text-secondary);
+        }
+        .pro_tbl tr.selected{
+            background-color: var(--primary-highlight);
+        }
+        .pro_tbl tr:first-child {
+            font-weight: bold;
+        }
+        .update_fields{
+            margin-bottom: 10px;
+            overflow-y: scroll;
+            scrollbar-width: none;
+            height: 720px;
+            /* background-color: #BEBDBD; */
+        }
+        .update_fields > div{
+            margin-top: 10px;
+        }
+        .update_fields input, 
+        .update_fields textarea{
+            width: calc(100% - 20px);
+        }
+        .update_fields select{
+            width: 100%;
+        }
+        .act, .inact{
+            padding: 8px 10px;
+            border-radius: 40px;
+            width: fit-content;
+            font-size: 11px;
+        }
+        .act{
+            background-color: var(--custom-green);
+            color: white;
+        }
+        .inact{
+            background-color: var(--surface-table-head-invert);
+            color: var(--text-secondary);
+        }
+        
+    </style>
+    <script>
+        const productTable = document.querySelector('.pro_tbl');
+       
+        for(let i = 0; i < 12; i++){
+            const template = `
+            <td>#66afdce6b54ecda4fcded83d</td>
+            <td>HP Pavillion Desktop</td>
+            <td>Laptops</td>
+            <td>22</td>
+            <td>$499</td>
+            <td>5%</td>
+            <td><p class="${i === 3 || i === 10? 'inact' : 'act'}">${i === 3 || i === 10? 'Inactive' : 'Active'}<p></td>
+        `;
+
+            const tableRow = document.createElement('tr');
+            if(i === 0){
+                tableRow.classList.add('selected');
+            }
+            tableRow.classList.add('hover');
+            tableRow.innerHTML = template;
+            productTable.appendChild(tableRow);
+        }
+    </script>
+</div>
