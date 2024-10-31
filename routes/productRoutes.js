@@ -5,8 +5,7 @@ const requireAuth = require('../middlewares/requireAuth');
 const isAdmin = require('../middlewares/isAdmin');
 const upload = require('../utils/upload');
 
-
-
+// All user previlages
 productRoute.get('/all', productController.allProducts);
 productRoute.get('/single/:id', productController.singleProduct);
 productRoute.get('/category/:cat', productController.byCategory);
@@ -19,8 +18,8 @@ productRoute.get('/wishlist-cart', productController.wishOrCart);
 // Admin user previlages
 productRoute.use(isAdmin);
 productRoute.post('/upload',upload.array('files', 10), productController.addProduct);
-productRoute.delete('/:id', (req, res) => { });
-productRoute.patch('/:id', (req, res) => { });
+productRoute.delete('/:id', productController.deleteProduct);
+productRoute.patch('/:id', productController.updateProduct);
 
 
 

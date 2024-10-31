@@ -147,6 +147,8 @@
 
         </div>
         <div class="sec_2">
+
+            <!-- Upload images section -->
             <div class="upload_img card">
                 <h2 class="sub_heading">Upload Images</h2>
 
@@ -197,7 +199,7 @@
 
                         const imgDelete = document.createElement('div');
                         imgDelete.classList.add('img_delete');
-                        imgDelete.title = 'Delete Image';
+                        imgDelete.title = 'Remove Image';
                         imgDelete.onclick = deleteImage;
 
                         const deleteIcon = document.createElement('img');
@@ -232,11 +234,12 @@
                 }
             </script>
 
+            <!-- Category section -->
             <div class="category card">
                 <h2 class="sub_heading">Category</h2>
                 <div class="cat">
                     <div class="col">
-                        <label for="category">Category</label>
+                        <label for="category">Product Category</label>
                         <select name="" id="category">
                             <% const categories=['---', 'Laptops' , 'Desktops' , 'Pc Gaming'
                                 , 'Monitors' , 'Computer Components' , 'Tablets & Phones'
@@ -245,13 +248,16 @@
 
                                 <% categories.forEach(function(value) { %>
                                     <option value="<%=(value === '---'? '': value)%>">
-                                        <%=value%>
+                                        <div>
+                                            <p><%=value%></p>
+                                            <img src="/temp/dell_gaming_laptop.jpg" width="40px" height="40px" alt="<%=value%>">
+                                        </div>
                                     </option>
                                     <% }); %>
                         </select>
                     </div>
-                    <button style="width: 125px;" onclick="togglePopup()" class="custom_btn">Add
-                        Category</button>
+                    <button style="width: fit-content" onclick="togglePopup()" class="custom_btn">Add
+                        New Category</button>
                 </div>
             </div>
         </div>

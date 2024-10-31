@@ -114,6 +114,7 @@
             </div>
         </div>
     </main>
+    
     <style>
         :root{
             --text-secondary: #727272;
@@ -174,6 +175,12 @@
         .inact{
             background-color: var(--surface-table-head-invert);
             color: var(--text-secondary);
+        }
+
+        @media screen and (max-width: 992px) {
+            .product_table_container{
+                overflow-x: scroll;
+            }
         }
         
     </style>

@@ -156,9 +156,22 @@ p {
 }
 
 .nav_content {
-    height: 88%;
+    height: calc(100% - 40px);
     display: flex;
     flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+/* Logout button */
+div.nav_content + div{
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding-inline: 15px;
+    gap: 11.25px;
+    margin-inline: 7.5px;
+    border-radius: 5px;
 }
 
 .nav_content .flex {
@@ -620,7 +633,11 @@ select {
     }
 
     .mobile_drawer {
+        height: 100dvh;
         display: block;
+    }
+    .mobile_drawer nav{
+        height: 100%;
     }
 
     .mobile_drawer.active {
@@ -631,6 +648,10 @@ select {
         visibility: visible;
         opacity: 0.5;
         cursor: pointer;
+    }
+
+    .product_list_content{
+        display: block;
     }
 }
 

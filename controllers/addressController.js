@@ -1,4 +1,4 @@
-const { jsonResponse, errorResponse, isValidPhoneNumber } = require("../methods");
+const { jsonResponse, errorResponse} = require("../methods");
 const Address = require('../models/addressModel');
 const CustomError = require("../models/customError");
 

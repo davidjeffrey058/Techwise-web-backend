@@ -5,7 +5,7 @@ const Product = require('../models/productModel');
 const { uploadBytesResumable, getStorage, getDownloadURL, ref } = require('firebase/storage');
 const app = require('../services/firebase');
 
-// Get all products
+// Get all products with limit
 const allProducts = async (req, res) => {
     try {
         const interval = req.query.interval || 0;
@@ -34,7 +34,7 @@ const singleProduct = async (req, res) => {
     }
 }
 
-// Get a products by category
+// Get products by category
 const byCategory = async (req, res) => {
     try {
         const products = await Product.find({ category: req.params.cat });
@@ -92,8 +92,6 @@ const wishOrCart = async (req, res) => {
     }
 }
 
-
-
 // Add a product
 const addProduct = async (req, res) => {
     try {
@@ -109,8 +107,8 @@ const addProduct = async (req, res) => {
             // total_rating,
         } = req.body;
 
-        const exists = await Product.findOne({ name });
-        if (exists) throw new CustomError('Product already exists', 400);
+        // const exists = await Product.findOne({ name });
+        // if (exists) throw new CustomError('Product already exists', 400);
 
         const files = req.files;
 
@@ -120,7 +118,8 @@ const addProduct = async (req, res) => {
         let image_urls = [];
 
         for (var i = 0; i < files.length; i++) {
-            const storageRef = ref(storage, `products/${name + Date.now()}`);
+            const imageName = name + Date.now();
+            const storageRef = ref(storage, `products/${imageName}`);
             const metadata = {
                 contentType: files[i].mimetype
             }
@@ -129,7 +128,7 @@ const addProduct = async (req, res) => {
 
             const downloadUrl = await getDownloadURL(results.ref);
 
-            image_urls.push(downloadUrl);
+            image_urls.push({image_name: imageName, download_url: downloadUrl});
         }
 
         const result = await Product.create({
@@ -153,6 +152,16 @@ const addProduct = async (req, res) => {
     }
 }
 
+// Delete a product
+const deleteProduct = async (req, res) => {
+
+}
+
+// Update a product
+const updateProduct = async (req, res) => {
+
+}
+
 
 module.exports = {
     allProducts,
@@ -160,5 +169,7 @@ module.exports = {
     byCategory,
     addProduct,
     productSearch,
-    wishOrCart
+    wishOrCart,
+    deleteProduct,
+    updateProduct
 }
