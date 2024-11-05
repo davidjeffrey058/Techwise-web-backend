@@ -19,7 +19,7 @@ productRoute.get('/wishlist-cart', productController.wishOrCart);
 productRoute.use(isAdmin);
 productRoute.post('/upload',upload.array('files', 10), productController.addProduct);
 productRoute.delete('/:id', productController.deleteProduct);
-productRoute.patch('/:id', productController.updateProduct);
+productRoute.patch('/:id',upload.array('files', 10), productController.updateProduct);
 
 
 
